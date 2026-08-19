@@ -1,41 +1,655 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ka1Guan's Homepage</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>[PROJECT TITLE]</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Google Sans Text", Arial, sans-serif;
+            color: #333;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ---------- Hero ---------- */
+
+        .hero {
+            padding: 70px 0 45px;
+            text-align: center;
+        }
+
+        .title {
+            font-family: "Google Sans", Arial, sans-serif;
+            font-size: 46px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        .subtitle {
+            font-size: 21px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .authors {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .authors a {
+            color: #3273dc;
+        }
+
+        .affiliation {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            opacity: 0.85;
+        }
+
+        /* ---------- Sections ---------- */
+
+        section {
+            padding: 45px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: "Google Sans", Arial, sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        .section-text {
+            max-width: 950px;
+            margin: 0 auto;
+            font-size: 17px;
+            color: #444;
+            text-align: justify;
+        }
+
+        /* ---------- Teaser ---------- */
+
+        .teaser {
+            padding: 20px 0 50px;
+        }
+
+        .teaser img {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .caption {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        /* ---------- Highlight Box ---------- */
+
+        .highlight {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-top: 25px;
+        }
+
+        .highlight p {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        /* ---------- Method ---------- */
+
+        .method-image {
+            margin: 30px auto;
+            max-width: 100%;
+        }
+
+        .method-image img {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+        }
+
+        /* ---------- Results ---------- */
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+        }
+
+        .result-card img {
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .result-card h3 {
+            margin: 12px 0 5px;
+            font-size: 19px;
+        }
+
+        .result-card p {
+            margin: 0;
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* ---------- Video ---------- */
+
+        .video-container {
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* ---------- BibTeX ---------- */
+
+        .bibtex {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .bibtex pre {
+            margin: 0;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        /* ---------- Footer ---------- */
+
+        footer {
+            border-top: 1px solid #eee;
+            padding: 30px 0;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ---------- Mobile ---------- */
+
+        @media (max-width: 768px) {
+
+            .hero {
+                padding-top: 45px;
+            }
+
+            .title {
+                font-size: 34px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .authors {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 27px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-text {
+                text-align: left;
+            }
+        }
+    </style>
 </head>
+
 
 <body>
 
-    <h1>Hello, I'm Ka1Guan!</h1>
+<!-- ========================================================= -->
+<!-- HERO -->
+<!-- ========================================================= -->
 
-    <p>Welcome to my personal homepage.</p>
+<header class="hero">
+    <div class="container">
 
-    <h2>About Me</h2>
+        <h1 class="title">
+            [PAPER TITLE]
+        </h1>
 
-    <p>
-        I am a researcher working on Computer Vision,
-        Egocentric Vision, and 3D Reconstruction.
-    </p>
+        <div class="subtitle">
+            [Optional Subtitle / Conference Name]
+        </div>
 
-    <h2>Research</h2>
+        <div class="authors">
+            <a href="[AUTHOR_LINK_1]">[Author 1]</a>,
+            <a href="[AUTHOR_LINK_2]">[Author 2]</a>,
+            <a href="[AUTHOR_LINK_3]">[Author 3]</a>,
+            <a href="[AUTHOR_LINK_4]">[Author 4]</a>
+        </div>
 
-    <ul>
-        <li>Egocentric Vision</li>
-        <li>3D Reconstruction</li>
-        <li>Human Motion Estimation</li>
-    </ul>
+        <div class="affiliation">
+            [University / Institution]
+        </div>
 
-    <h2>My Project</h2>
+        <div class="links">
+            <a class="button" href="[PAPER_LINK]">
+                📄 Paper
+            </a>
 
-    <p>
-        RE-SELF: Seeing the World and the Self from Egocentric Video.
-    </p>
+            <a class="button" href="[ARXIV_LINK]">
+                arXiv
+            </a>
 
-    <h2>Links</h2>
+            <a class="button" href="[CODE_LINK]">
+                💻 Code
+            </a>
 
-    <p>
-        <a href="https://github.com/">GitHub</a>
-    </p>
+            <a class="button" href="[DATASET_LINK]">
+                📦 Dataset
+            </a>
+        </div>
+
+    </div>
+</header>
+
+
+<!-- ========================================================= -->
+<!-- TEASER -->
+<!-- ========================================================= -->
+
+<section class="teaser">
+    <div class="container">
+
+        <!-- Replace with your teaser figure -->
+        <img src="[TEASER_IMAGE]" alt="Teaser Figure">
+
+        <div class="caption">
+            [Teaser figure caption.]
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- ABSTRACT -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Abstract
+        </h2>
+
+        <div class="section-text">
+
+            <p>
+                [Insert your abstract here.]
+                This section should briefly describe the problem,
+                motivation, proposed method, and main results.
+            </p>
+
+            <div class="highlight">
+                <p>
+                    <strong>RE-SELF</strong>:
+                    [One or two sentences highlighting the key idea
+                    and contribution of your work.]
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- METHOD -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Method
+        </h2>
+
+        <div class="section-text">
+
+            <p>
+                [Describe the key motivation and overall framework.]
+            </p>
+
+        </div>
+
+        <div class="method-image">
+
+            <!-- Replace with your method overview -->
+            <img src="[METHOD_OVERVIEW_IMAGE]"
+                 alt="Method Overview">
+
+            <div class="caption">
+                [Method overview caption.]
+            </div>
+
+        </div>
+
+        <div class="section-text">
+
+            <p>
+                <strong>Scene Reconstruction.</strong>
+                [Description of the scene reconstruction component.]
+            </p>
+
+            <p>
+                <strong>Full-body Motion Estimation.</strong>
+                [Description of the motion estimation component.]
+            </p>
+
+            <p>
+                <strong>Bidirectional Feedback.</strong>
+                [Description of how scene and motion interact.]
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- VIDEO -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Video
+        </h2>
+
+        <div class="video-container">
+
+            <!-- Replace with your video -->
+            <video controls>
+                <source src="[VIDEO_LINK]" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- RESULTS -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Results
+        </h2>
+
+        <div class="section-text">
+            <p>
+                [Describe your main experimental results.]
+            </p>
+        </div>
+
+
+        <div class="result-grid">
+
+            <div class="result-card">
+
+                <img src="[RESULT_IMAGE_1]"
+                     alt="Result 1">
+
+                <h3>
+                    [Result Title 1]
+                </h3>
+
+                <p>
+                    [Result description.]
+                </p>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <img src="[RESULT_IMAGE_2]"
+                     alt="Result 2">
+
+                <h3>
+                    [Result Title 2]
+                </h3>
+
+                <p>
+                    [Result description.]
+                </p>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <img src="[RESULT_IMAGE_3]"
+                     alt="Result 3">
+
+                <h3>
+                    [Result Title 3]
+                </h3>
+
+                <p>
+                    [Result description.]
+                </p>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <img src="[RESULT_IMAGE_4]"
+                     alt="Result 4">
+
+                <h3>
+                    [Result Title 4]
+                </h3>
+
+                <p>
+                    [Result description.]
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- ABLATION -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Ablation Study
+        </h2>
+
+        <div class="section-text">
+
+            <p>
+                [Describe your ablation experiments and findings.]
+            </p>
+
+        </div>
+
+        <div class="method-image">
+
+            <img src="[ABLATION_IMAGE]"
+                 alt="Ablation Study">
+
+            <div class="caption">
+                [Ablation study caption.]
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- DATASET -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            Dataset
+        </h2>
+
+        <div class="section-text">
+
+            <p>
+                [Describe your dataset.]
+            </p>
+
+            <p>
+                [Dataset statistics, number of sequences,
+                categories, scenes, etc.]
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- BibTeX -->
+<!-- ========================================================= -->
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">
+            BibTeX
+        </h2>
+
+        <div class="bibtex">
+
+<pre>
+@inproceedings{[CITATION_KEY],
+    title     = {[PAPER TITLE]},
+    author    = {[AUTHORS]},
+    booktitle = {[CONFERENCE]},
+    year      = {[YEAR]}
+}
+</pre>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- FOOTER -->
+<!-- ========================================================= -->
+
+<footer>
+    <div class="container">
+
+        <p>
+            © [YEAR] [AUTHOR / LAB NAME].
+            All rights reserved.
+        </p>
+
+        <p>
+            Website template inspired by
+            <a href="[TEMPLATE_SOURCE_LINK]">
+                [Template Source]
+            </a>.
+        </p>
+
+    </div>
+</footer>
+
 
 </body>
 </html>
