@@ -1,1 +1,2 @@
-# Official code for paper "Seeing the World and the Self from Egocentric Video"
+# RE-SELF
+Official code for paper "Seeing the World and the Self from Egocentric Video"
