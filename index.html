@@ -3,658 +3,790 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RE-SELF jointly reconstructs metric 3D scene geometry, camera motion, and the unseen wearer's full-body motion from monocular egocentric video.">
+    <meta property="og:title" content="Seeing the World and the Self from Egocentric Video">
+    <meta property="og:description" content="Joint metric scene-and-self reconstruction from monocular egocentric video.">
+    <meta property="og:image" content="assets/fig_teaser.png">
+    <title>RE-SELF | Seeing the World and the Self from Egocentric Video</title>
 
-    <title>[PROJECT TITLE]</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --ink: #171717;
+            --body: #404040;
+            --muted: #6b7280;
+            --line: #dedede;
+            --soft: #f6f6f4;
+            --accent: #a44320;
+            --accent-dark: #7f3218;
+            --ours: #c65d2e;
+            --ground-truth: #2f7d59;
+            --baseline: #356aa0;
+            --page-width: 1080px;
+            --text-width: 740px;
         }
+
+        * { box-sizing: border-box; }
+        html { max-width: 100%; overflow-x: clip; scroll-behavior: smooth; }
 
         body {
+            max-width: 100%;
+            overflow-x: clip;
             margin: 0;
-            font-family: "Google Sans Text", Arial, sans-serif;
-            color: #333;
+            color: var(--ink);
             background: #fff;
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 16px;
             line-height: 1.6;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
+        img, video { max-width: 100%; }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 3px solid rgba(164, 67, 32, 0.3);
+            outline-offset: 3px;
         }
 
         .container {
-            max-width: 1100px;
+            width: min(var(--page-width), calc(100% - 40px));
             margin: 0 auto;
-            padding: 0 24px;
         }
 
-        /* ---------- Hero ---------- */
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            min-height: 54px;
+            border-bottom: 1px solid rgba(222, 222, 222, 0.88);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-inner {
+            display: flex;
+            min-height: 54px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand { color: var(--accent); font-weight: 700; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .nav-links a {
+            display: inline-flex;
+            min-height: 44px;
+            align-items: center;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a[aria-current="true"] {
+            color: var(--ink);
+            border-bottom-color: var(--accent);
+        }
 
         .hero {
-            padding: 70px 0 45px;
+            padding: 44px 0 28px;
             text-align: center;
         }
 
-        .title {
-            font-family: "Google Sans", Arial, sans-serif;
-            font-size: 46px;
+        .venue {
+            margin: 0 0 10px;
+            color: var(--accent);
+            font-size: 13px;
             font-weight: 700;
-            line-height: 1.15;
-            margin-bottom: 25px;
-            color: #222;
+            text-transform: uppercase;
         }
 
-        .subtitle {
-            font-size: 21px;
-            color: #666;
-            margin-bottom: 25px;
+        h1 {
+            max-width: 900px;
+            margin: 0 auto 12px;
+            font-size: 40px;
+            line-height: 1.16;
+            letter-spacing: 0;
         }
 
-        .authors {
+        .tagline {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            color: var(--body);
             font-size: 18px;
-            margin-bottom: 10px;
+            line-height: 1.5;
         }
+
+        .tagline strong { color: var(--accent); }
+        .authors { margin-bottom: 6px; font-size: 15px; }
 
         .authors a {
-            color: #3273dc;
+            color: var(--accent-dark);
+            border-bottom: 1px solid transparent;
         }
 
-        .affiliation {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
+        .authors a:hover { border-bottom-color: currentColor; }
+
+        .affiliations {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
         }
 
-        .links {
+        .resource-row {
             display: flex;
             justify-content: center;
-            gap: 12px;
             flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 20px;
         }
 
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            background: #222;
-            color: white;
-            font-size: 15px;
-            font-weight: 500;
-            transition: 0.2s;
+        .resource-link,
+        .copy-button {
+            display: inline-flex;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 16px;
+            border: 1px solid var(--ink);
+            border-radius: 6px;
+            color: #fff;
+            background: var(--ink);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
         }
 
-        .button:hover {
-            transform: translateY(-2px);
-            opacity: 0.85;
+        .resource-link:hover,
+        .copy-button:hover {
+            border-color: var(--accent);
+            background: var(--accent);
         }
 
-        /* ---------- Sections ---------- */
-
-        section {
-            padding: 45px 0;
+        .release-note {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
         }
 
-        .section-title {
+        main section {
+            padding: 42px 0;
+            scroll-margin-top: 54px;
+        }
+
+        .band {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            background: var(--soft);
+        }
+
+        .section-heading {
+            margin: 0 0 8px;
+            font-size: 27px;
+            line-height: 1.25;
             text-align: center;
-            font-family: "Google Sans", Arial, sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: #222;
         }
 
-        .section-text {
-            max-width: 950px;
-            margin: 0 auto;
-            font-size: 17px;
-            color: #444;
-            text-align: justify;
+        .section-lead {
+            max-width: 720px;
+            margin: 0 auto 25px;
+            color: var(--body);
+            text-align: center;
         }
 
-        /* ---------- Teaser ---------- */
-
-        .teaser {
-            padding: 20px 0 50px;
-        }
-
-        .teaser img {
+        .media-frame {
+            position: relative;
+            display: grid;
             width: 100%;
-            display: block;
-            border-radius: 10px;
+            overflow: hidden;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
         }
+
+        .media-frame.teaser-frame { aspect-ratio: 16 / 7; }
+        .media-frame.method-frame { aspect-ratio: 16 / 6; }
+        .media-frame.result-frame { aspect-ratio: 16 / 9; }
+
+        .media-frame img,
+        .media-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .media-frame video { background: #111; }
+
+        .media-frame.is-missing::after {
+            content: attr(data-placeholder);
+            padding: 24px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .media-frame.is-missing img { display: none; }
 
         .caption {
-            text-align: justify;
-            color: #777;
-            font-size: 14px;
-            margin-top: 12px;
+            max-width: 920px;
+            margin: 9px auto 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
         }
 
-        /* ---------- Highlight Box ---------- */
+        .teaser-section { padding-top: 12px; }
 
-        .highlight {
-            background: #f7f7f7;
-            border-radius: 12px;
-            padding: 25px 30px;
-            margin-top: 25px;
+        .core-statement {
+            max-width: 850px;
+            margin: 18px auto 0;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.55;
+            text-align: center;
         }
 
-        .highlight p {
-            margin: 0;
-            font-size: 17px;
-        }
-
-        /* ---------- Method ---------- */
-
-        .method-image {
-            margin: 30px auto;
-            max-width: 100%;
-        }
-
-        .method-image img {
-            width: 100%;
-            display: block;
-            border-radius: 10px;
-        }
-
-        /* ---------- Results ---------- */
-
-        .result-grid {
+        .problem-grid,
+        .stage-grid,
+        .ablation-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .problem-item,
+        .stage,
+        .ablation-item { padding: 4px 26px; }
+
+        .problem-item + .problem-item,
+        .stage + .stage,
+        .ablation-item + .ablation-item { border-left: 1px solid var(--line); }
+
+        .eyebrow {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .problem-item h3,
+        .stage h3,
+        .ablation-item h3 {
+            margin: 0 0 7px;
+            font-size: 17px;
+            line-height: 1.35;
+        }
+
+        .problem-item p,
+        .stage p,
+        .ablation-item p {
+            margin: 0;
+            color: var(--body);
+            font-size: 14px;
+        }
+
+        .method-figure { margin: 0 0 27px; }
+
+        .stage-number {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            margin-bottom: 10px;
+            place-items: center;
+            border-radius: 50%;
+            color: #fff;
+            background: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .demo-note {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 18px;
+            color: var(--body);
+            font-size: 13px;
+        }
+
+        .legend span::before {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            margin-right: 6px;
+            border-radius: 50%;
+            content: "";
+        }
+
+        .legend .gt::before { background: var(--ground-truth); }
+        .legend .ours::before { background: var(--ours); }
+        .legend .base::before { background: var(--baseline); }
+
+        .result-group {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 22px;
+            padding: 20px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .result-group:last-child { border-bottom: 1px solid var(--line); }
+        .result-label h3 { margin: 0 0 3px; font-size: 17px; }
+        .result-label p { margin: 0; color: var(--muted); font-size: 12px; }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .metric-name { color: var(--muted); font-size: 12px; }
+
+        .metric-value {
+            margin: 2px 0;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .metric-value .from { color: var(--muted); font-size: 14px; font-weight: 500; }
+        .metric-value .to { color: var(--accent); }
+        .metric-note { color: var(--muted); font-size: 11px; }
+
+        .qualitative-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
             margin-top: 30px;
         }
 
-        .result-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            background: white;
+        .qualitative-grid figure { margin: 0; }
+
+        .dataset-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            gap: 45px;
         }
 
-        .result-card img {
-            width: 100%;
-            border-radius: 6px;
+        .dataset-copy .section-heading,
+        .dataset-copy .section-lead { margin-left: 0; text-align: left; }
+        .dataset-copy .section-lead { margin-bottom: 0; }
+
+        .dataset-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1px;
+            border: 1px solid var(--line);
+            background: var(--line);
         }
 
-        .result-card h3 {
-            margin: 12px 0 5px;
-            font-size: 19px;
+        .dataset-stat {
+            min-height: 104px;
+            padding: 18px;
+            background: #fff;
         }
 
-        .result-card p {
-            margin: 0;
-            color: #666;
-            font-size: 15px;
+        .dataset-stat strong {
+            display: block;
+            color: var(--accent);
+            font-size: 25px;
+            line-height: 1.2;
         }
 
-        /* ---------- Video ---------- */
+        .dataset-stat span { color: var(--muted); font-size: 12px; }
 
-        .video-container {
-            max-width: 900px;
-            margin: 30px auto;
+        details {
+            width: min(740px, 100%);
+            margin: 0 auto;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
         }
 
-        .video-container video {
-            width: 100%;
-            border-radius: 10px;
-        }
+        summary { padding: 16px 0; cursor: pointer; font-weight: 600; }
+        details p { margin: 0 0 18px; color: var(--body); }
 
-        /* ---------- BibTeX ---------- */
+        .citation-wrap { width: min(860px, 100%); margin: 0 auto; }
 
         .bibtex {
-            background: #f5f5f5;
-            padding: 25px;
-            border-radius: 10px;
             overflow-x: auto;
-            max-width: 950px;
-            margin: 0 auto;
-        }
-
-        .bibtex pre {
             margin: 0;
-            font-size: 14px;
-            white-space: pre-wrap;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--soft);
+            color: #303030;
+            font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            white-space: pre;
         }
 
-        /* ---------- Footer ---------- */
+        .copy-button {
+            margin: 12px auto 0;
+            border-color: var(--line);
+            color: var(--ink);
+            background: #fff;
+        }
+
+        .copy-row { display: flex; justify-content: center; }
 
         footer {
-            border-top: 1px solid #eee;
-            padding: 30px 0;
+            padding: 27px 0;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
             text-align: center;
-            color: #888;
-            font-size: 14px;
         }
 
-        /* ---------- Mobile ---------- */
+        footer p { margin: 3px 0; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 820px) {
+            .nav-links { gap: 14px; }
+            .nav-links a:nth-last-child(-n + 2) { display: none; }
+            h1 { font-size: 34px; }
 
-            .hero {
-                padding-top: 45px;
+            .problem-grid,
+            .stage-grid,
+            .ablation-grid { grid-template-columns: 1fr; }
+
+            .problem-item,
+            .stage,
+            .ablation-item { padding: 18px 0; }
+
+            .problem-item + .problem-item,
+            .stage + .stage,
+            .ablation-item + .ablation-item {
+                border-top: 1px solid var(--line);
+                border-left: 0;
             }
 
-            .title {
-                font-size: 34px;
-            }
+            .dataset-layout { grid-template-columns: 1fr; gap: 24px; }
+            .dataset-copy .section-heading,
+            .dataset-copy .section-lead { text-align: center; }
+        }
 
-            .subtitle {
-                font-size: 18px;
-            }
+        @media (max-width: 620px) {
+            .container { width: min(calc(100% - 28px), var(--page-width)); }
+            .site-nav, .nav-inner { min-height: 50px; }
+            .nav-links { gap: 12px; font-size: 12px; }
+            .nav-links a { min-height: 42px; }
+            .hero { padding-top: 30px; }
+            h1 { font-size: 30px; }
+            .tagline { font-size: 16px; }
+            main section { padding: 34px 0; }
+            .section-heading { font-size: 24px; }
+            .teaser-section { padding-top: 8px; }
 
-            .authors {
-                font-size: 16px;
-            }
+            .media-frame.teaser-frame,
+            .media-frame.method-frame { aspect-ratio: 4 / 3; }
 
-            .section-title {
-                font-size: 27px;
-            }
+            .result-group { grid-template-columns: 1fr; gap: 12px; }
+            .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .qualitative-grid { grid-template-columns: 1fr; }
+            .bibtex { padding: 16px; font-size: 11px; }
+        }
 
-            .result-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-text {
-                text-align: left;
-            }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
 
-
 <body>
-
-<!-- ========================================================= -->
-<!-- HERO -->
-<!-- ========================================================= -->
-
-<header class="hero">
-    <div class="container">
-
-        <h1 class="title">
-            Seeing the World and the Self from Egocentric Video
-        </h1>
-
-        <div class="subtitle">
-            RE-SELF: <u>RE</u>constructing the <u>S</u>cene and the s<u>ELF</u>
-        </div>
-
-        <div class="authors">
-            <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2</sup>,
-            <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2</sup>,
-            <a href="[AUTHOR_LINK_3]">Liruichen Wang</a><sup>2</sup>,
-            <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,*</sup>,
-            <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,*</sup>
-        </div>
-
-        <div class="affiliation">
-            <sup>1</sup> The Hong Kong Polytechnic University
-            <br>
-            <sup>2</sup> Eastern Institute of Technology, Ningbo
-            <br>
-            <span style="font-size: 14px;">* Corresponding authors</span>
-        </div>
-
-        <div class="links">
-            <a class="button" href="[PAPER_LINK]">
-                📄 Paper
-            </a>
-
-            <a class="button" href="[ARXIV_LINK]">
-                arXiv
-            </a>
-
-            <a class="button" href="[CODE_LINK]">
-                💻 Code
-            </a>
-
-            <a class="button" href="[DATASET_LINK]">
-                📦 Dataset
-            </a>
-        </div>
-
-    </div>
-</header>
-
-<!-- ========================================================= -->
-<!-- TEASER -->
-<!-- ========================================================= -->
-
-<section class="teaser">
-    <div class="container">
-
-        <img src="assets/fig_teaser.png"
-             alt="Teaser Figure">
-
-        <div class="caption">
-            RE-SELF jointly reconstructs the scene and the wearer's full-body motion from monocular ego video, 
-            addressing the self-blind and world-blind limitations of scene-only and motion-only methods, respectively. 
-            Furthermore, by leveraging the mutually reinforcing relationship between scene and motion, RE-SELF outperforms methods designed for either task alone.
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- ABSTRACT -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Abstract
-        </h2>
-
-        <div class="section-text">
-
-            <p>
-                Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. 
-                Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, 
-                whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. 
-                Joint recovery is challenging because the two tasks exhibit asymmetric visibility and require different prediction paradigms. 
-                The largely visible scene supports deterministic geometric regression, whereas the severely occluded body requires generative motion inference. 
-                We therefore propose RE-SELF (<strong><u>RE</u></strong>constructing the <strong><u>S</u></strong>cene and the s<strong><u>ELF</u></strong>), 
-                a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. 
-                RE-SELF adapts a geometry foundation model pre-trained on large-scale exocentric data to egocentric video using frame-wise scale and relative-pose consistency objectives. 
-                The resulting camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion. 
-                A subsequent closed-loop kinematic feedback stage further refines the camera head while preserving the reconstructed scene geometry. 
-                To support training and evaluation, we curate EE4D-JSM from EgoExo4D by aligning egocentric video, sparse metric scene geometry, camera trajectories, and full-body motion annotations. 
-                Experiments show that RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation. 
-                Code, models, and the dataset will be released.
-            </p>
-
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- METHOD -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Method
-        </h2>
-
-        <div class="section-text">
-
-        </div>
-
-        <div class="method-image">
-
-            <!-- Replace with your method overview -->
-            <img src="assets/fig_inference.png"
-                 alt="Method Overview">
-
-            <div class="caption">
-                From monocular egocentric video, the geometry backbone recovers scene geometry and camera trajectory, 
-                which condition a diffusion motion head for full-body motion reconstruction in a shared metric frame.
+    <nav class="site-nav" aria-label="Project sections">
+        <div class="container nav-inner">
+            <a class="brand" href="#top">RE-SELF</a>
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#method">Method</a>
+                <a href="#results">Results</a>
+                <a href="#dataset">Dataset</a>
+                <a href="#citation">Citation</a>
             </div>
-
         </div>
+    </nav>
 
-        <div class="section-text">
+    <header class="hero" id="top">
+        <div class="container">
+            <p class="venue">Research Project</p>
+            <h1>Seeing the World and the Self from Egocentric Video</h1>
+            <p class="tagline"><strong>RE-SELF</strong> jointly reconstructs metric 3D scene geometry, camera motion, and the unseen wearer's full-body motion from a monocular egocentric video.</p>
 
-            <p>
-                <strong>Scene Reconstruction.</strong>
-                [Description of the scene reconstruction component.]
-            </p>
-
-            <p>
-                <strong>Full-body Motion Estimation.</strong>
-                [Description of the motion estimation component.]
-            </p>
-
-            <p>
-                <strong>Bidirectional Feedback.</strong>
-                [Description of how scene and motion interact.]
-            </p>
-
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- VIDEO -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Video
-        </h2>
-
-        <div class="video-container">
-
-            <!-- Replace with your video -->
-            <video controls>
-                <source src="[VIDEO_LINK]" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- RESULTS -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Results
-        </h2>
-
-        <div class="section-text">
-            <p>
-                [Describe your main experimental results.]
-            </p>
-        </div>
-
-
-        <div class="result-grid">
-
-            <div class="result-card">
-
-                <img src="[RESULT_IMAGE_1]"
-                     alt="Result 1">
-
-                <h3>
-                    [Result Title 1]
-                </h3>
-
-                <p>
-                    [Result description.]
-                </p>
-
+            <div class="authors">
+                <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2</sup>,
+                <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2</sup>,
+                <a href="[AUTHOR_LINK_3]">Liruichen Wang</a><sup>2</sup>,
+                <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,*</sup>,
+                <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,*</sup>
             </div>
+            <p class="affiliations"><sup>1</sup>The Hong Kong Polytechnic University &nbsp;&nbsp; <sup>2</sup>Eastern Institute of Technology, Ningbo &nbsp;&nbsp; *Corresponding authors</p>
 
-
-            <div class="result-card">
-
-                <img src="[RESULT_IMAGE_2]"
-                     alt="Result 2">
-
-                <h3>
-                    [Result Title 2]
-                </h3>
-
-                <p>
-                    [Result description.]
-                </p>
-
+            <div class="resource-row" aria-label="Project resources">
+                <a class="resource-link" href="[PAPER_LINK]">Paper</a>
+                <a class="resource-link" href="[ARXIV_LINK]">arXiv</a>
+                <a class="resource-link" href="#demo">Video</a>
             </div>
+            <div class="release-note"><span>Code: coming soon</span><span>Dataset: coming soon</span></div>
+        </div>
+    </header>
 
-
-            <div class="result-card">
-
-                <img src="[RESULT_IMAGE_3]"
-                     alt="Result 3">
-
-                <h3>
-                    [Result Title 3]
-                </h3>
-
-                <p>
-                    [Result description.]
-                </p>
-
+    <main>
+        <section class="teaser-section" aria-labelledby="teaser-caption">
+            <div class="container">
+                <figure style="margin: 0;">
+                    <div class="media-frame teaser-frame" data-placeholder="Add the RE-SELF teaser figure">
+                        <img src="assets/fig_teaser.png" alt="RE-SELF contrasts self-blind scene reconstruction, world-blind motion reconstruction, and joint scene-and-self reconstruction." loading="eager">
+                    </div>
+                    <figcaption class="caption" id="teaser-caption">Scene-only reconstruction is <strong>self-blind</strong>; motion-only reconstruction is <strong>world-blind</strong>. RE-SELF recovers the surrounding scene, camera trajectory, and full-body motion together in one shared metric frame.</figcaption>
+                </figure>
+                <p class="core-statement">The visible world favors deterministic geometry, while the invisible body requires generative motion inference. RE-SELF connects both through metric camera geometry and closed-loop kinematic feedback.</p>
             </div>
+        </section>
 
-
-            <div class="result-card">
-
-                <img src="[RESULT_IMAGE_4]"
-                     alt="Result 4">
-
-                <h3>
-                    [Result Title 4]
-                </h3>
-
-                <p>
-                    [Result description.]
-                </p>
-
+        <section class="band" id="overview">
+            <div class="container">
+                <h2 class="section-heading">One video, two complementary blind spots</h2>
+                <p class="section-lead">Existing approaches solve only one side of complete egocentric 3D perception.</p>
+                <div class="problem-grid">
+                    <article class="problem-item">
+                        <span class="eyebrow">Scene reconstruction</span>
+                        <h3>Self-blind</h3>
+                        <p>Recovers scene geometry and camera motion, but treats the wearer as absent or dynamic noise.</p>
+                    </article>
+                    <article class="problem-item">
+                        <span class="eyebrow">Motion reconstruction</span>
+                        <h3>World-blind</h3>
+                        <p>Infers plausible full-body motion, but lacks explicit metric scene context and often relies on external trajectories.</p>
+                    </article>
+                    <article class="problem-item">
+                        <span class="eyebrow">RE-SELF</span>
+                        <h3>Joint world and self</h3>
+                        <p>Couples scene, camera, and SMPL-X motion in a common metric coordinate frame so that each task can support the other.</p>
+                    </article>
+                </div>
             </div>
+        </section>
 
-        </div>
+        <section id="method">
+            <div class="container">
+                <h2 class="section-heading">A geometry-conditioned, closed-loop framework</h2>
+                <p class="section-lead">RE-SELF transfers large-scale exocentric geometry priors to egocentric video, then uses the recovered world to generate the unseen wearer.</p>
 
-    </div>
-</section>
+                <figure class="method-figure">
+                    <div class="media-frame method-frame" data-placeholder="Add the RE-SELF method overview">
+                        <img src="assets/fig_inference.png" alt="Overview of the RE-SELF geometry backbone, motion head, and closed-loop feedback." loading="lazy">
+                    </div>
+                    <figcaption class="caption">The geometry backbone predicts metric pointmaps and camera poses. Camera trajectories and attention-pooled register tokens condition a diffusion motion head; motion supervision subsequently refines the camera head.</figcaption>
+                </figure>
 
-
-<!-- ========================================================= -->
-<!-- ABLATION -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Ablation Study
-        </h2>
-
-        <div class="section-text">
-
-            <p>
-                [Describe your ablation experiments and findings.]
-            </p>
-
-        </div>
-
-        <div class="method-image">
-
-            <img src="[ABLATION_IMAGE]"
-                 alt="Ablation Study">
-
-            <div class="caption">
-                [Ablation study caption.]
+                <div class="stage-grid">
+                    <article class="stage">
+                        <span class="stage-number">1</span>
+                        <h3>Egocentric geometry adaptation</h3>
+                        <p>Frame-wise metric-scale and relative-egomotion objectives adapt Pi3X to rapid head motion and dynamic ego video.</p>
+                    </article>
+                    <article class="stage">
+                        <span class="stage-number">2</span>
+                        <h3>Geometry-conditioned motion</h3>
+                        <p>The camera trajectory anchors global motion, while scene-aware register tokens guide conditional SMPL-X motion diffusion.</p>
+                    </article>
+                    <article class="stage">
+                        <span class="stage-number">3</span>
+                        <h3>Kinematic feedback</h3>
+                        <p>A frozen motion prior sends gradients through the differentiable trajectory condition to improve camera tracking.</p>
+                    </article>
+                </div>
             </div>
+        </section>
 
+        <section class="band" id="demo">
+            <div class="container">
+                <h2 class="section-heading">Joint reconstruction in action</h2>
+                <p class="section-lead">Compare the input video with the recovered scene, camera trajectory, and temporally coherent full-body motion.</p>
+                <div class="legend" aria-label="Visualization legend">
+                    <span class="gt">Ground truth</span>
+                    <span class="ours">RE-SELF</span>
+                    <span class="base">UniEgoMotion</span>
+                </div>
+                <div class="media-frame result-frame" data-placeholder="Add the main project video">
+                    <video controls preload="metadata" playsinline poster="[VIDEO_POSTER]">
+                        <source src="[VIDEO_LINK]" type="video/mp4">
+                        Your browser does not support HTML video.
+                    </video>
+                </div>
+                <p class="demo-note">Recommended layout: synchronized ego input, 3D overview, and front/top-view comparisons.</p>
+            </div>
+        </section>
+
+        <section id="results">
+            <div class="container">
+                <h2 class="section-heading">State-of-the-art world and self reconstruction</h2>
+                <p class="section-lead">RE-SELF improves camera tracking, metric scene depth, body motion, and hand motion under a controlled EE4D-JSM protocol.</p>
+
+                <div class="result-group">
+                    <div class="result-label"><h3>Camera</h3><p>Similarity alignment<br>Pi3X → RE-SELF</p></div>
+                    <div class="metrics">
+                        <div><div class="metric-name">ATE ↓</div><div class="metric-value"><span class="from">0.016 →</span> <span class="to">0.012</span></div><div class="metric-note">global trajectory</div></div>
+                        <div><div class="metric-name">RPE-t ↓</div><div class="metric-value"><span class="from">0.015 →</span> <span class="to">0.009</span></div><div class="metric-note">relative translation</div></div>
+                        <div><div class="metric-name">RPE-r ↓</div><div class="metric-value"><span class="from">0.557 →</span> <span class="to">0.341</span></div><div class="metric-note">relative rotation</div></div>
+                    </div>
+                </div>
+
+                <div class="result-group">
+                    <div class="result-label"><h3>Metric geometry</h3><p>Absolute scale<br>Pi3X → RE-SELF</p></div>
+                    <div class="metrics">
+                        <div><div class="metric-name">ATE ↓</div><div class="metric-value"><span class="from">0.026 →</span> <span class="to">0.022</span></div><div class="metric-note">meters</div></div>
+                        <div><div class="metric-name">RPE-t ↓</div><div class="metric-value"><span class="from">0.019 →</span> <span class="to">0.010</span></div><div class="metric-note">meters</div></div>
+                        <div><div class="metric-name">Depth δ1 ↑</div><div class="metric-value"><span class="from">86.26 →</span> <span class="to">87.25</span></div><div class="metric-note">percent</div></div>
+                    </div>
+                </div>
+
+                <div class="result-group">
+                    <div class="result-label"><h3>Full-body motion</h3><p>UEM → RE-SELF</p></div>
+                    <div class="metrics">
+                        <div><div class="metric-name">HTE ↓</div><div class="metric-value"><span class="from">0.066 →</span> <span class="to">0.050</span></div><div class="metric-note">global head translation</div></div>
+                        <div><div class="metric-name">MPJPE ↓</div><div class="metric-value"><span class="from">0.116 →</span> <span class="to">0.110</span></div><div class="metric-note">22 body joints</div></div>
+                        <div><div class="metric-name">H-MPJPE ↓</div><div class="metric-value"><span class="from">0.184 →</span> <span class="to">0.175</span></div><div class="metric-note">30 hand joints</div></div>
+                    </div>
+                </div>
+
+                <div class="qualitative-grid">
+                    <figure>
+                        <div class="media-frame result-frame" data-placeholder="Add a local articulation comparison"><img src="[MOTION_RESULT_IMAGE]" alt="Qualitative comparison of UniEgoMotion and RE-SELF body articulation." loading="lazy"></div>
+                        <figcaption class="caption"><strong>Local articulation.</strong> Geometry context improves body and hand pose under severe self-occlusion.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="media-frame result-frame" data-placeholder="Add a global trajectory comparison"><img src="[TRAJECTORY_RESULT_IMAGE]" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
+                        <figcaption class="caption"><strong>Global alignment.</strong> Metric camera conditioning reduces root drift and better aligns motion with the scene.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="dataset">
+            <div class="container dataset-layout">
+                <div class="dataset-copy">
+                    <span class="eyebrow">EE4D-JSM</span>
+                    <h2 class="section-heading">Aligned supervision for the world and the self</h2>
+                    <p class="section-lead">Built from EgoExo4D and EE4D-Motion, EE4D-JSM aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion under one training and evaluation protocol.</p>
+                </div>
+                <div class="dataset-stats" aria-label="EE4D-JSM statistics">
+                    <div class="dataset-stat"><strong>16,807</strong><span>training sequences</span></div>
+                    <div class="dataset-stat"><strong>5,212</strong><span>testing sequences</span></div>
+                    <div class="dataset-stat"><strong>18</strong><span>activity categories</span></div>
+                    <div class="dataset-stat"><strong>70+</strong><span>diverse scenes</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ablation">
+            <div class="container">
+                <h2 class="section-heading">What makes the loop work?</h2>
+                <p class="section-lead">Controlled ablations isolate the contribution of each stage.</p>
+                <div class="ablation-grid">
+                    <article class="ablation-item"><span class="eyebrow">Ego adaptation</span><h3>Stable metric geometry</h3><p>Frame-wise scale supervision reduces scale variation, while relative-egomotion supervision improves short-term camera consistency.</p></article>
+                    <article class="ablation-item"><span class="eyebrow">Scene to self</span><h3>Geometry beats appearance alone</h3><p>RE-SELF-s1 geometry features improve motion and hand reconstruction beyond trajectory-only and generic DINOv2 conditions.</p></article>
+                    <article class="ablation-item"><span class="eyebrow">Self to scene</span><h3>Feedback, not extra training</h3><p>Kinematic feedback reaches 0.0217 ATE, while an equally trained camera-only control remains at 0.0233.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="abstract">
+            <div class="container">
+                <h2 class="section-heading">Abstract</h2>
+                <p class="section-lead">The complete paper summary is available here without interrupting the visual narrative above.</p>
+                <details>
+                    <summary>Read the abstract</summary>
+                    <p>Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RE-SELF, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RE-SELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
+                </details>
+            </div>
+        </section>
+
+        <section id="citation">
+            <div class="container">
+                <h2 class="section-heading">Citation</h2>
+                <p class="section-lead">Please cite the paper if RE-SELF or EE4D-JSM is useful for your research.</p>
+                <div class="citation-wrap">
+                    <pre class="bibtex" id="bibtex">@inproceedings{guan2026reself,
+  title     = {Seeing the World and the Self from Egocentric Video},
+  author    = {Guan, Kai and Jiang, Minchao and Wang, Liruichen and Zhu, Wentao and Zhang, Lei},
+  booktitle = {[Conference]},
+  year      = {2026}
+}</pre>
+                    <div class="copy-row"><button class="copy-button" id="copy-bibtex" type="button">Copy BibTeX</button></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>RE-SELF: Seeing the World and the Self from Egocentric Video</p>
+            <p>Code, models, and EE4D-JSM will be released according to the publication schedule.</p>
         </div>
+    </footer>
 
-    </div>
-</section>
+    <script>
+        const projectImages = document.querySelectorAll(".media-frame img");
+        projectImages.forEach((image) => {
+            const markMissing = () => image.parentElement.classList.add("is-missing");
+            image.addEventListener("error", markMissing);
+            if (image.complete && image.naturalWidth === 0) markMissing();
+        });
 
+        const navLinks = [...document.querySelectorAll(".nav-links a")];
+        const sections = navLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+        const sectionObserver = new IntersectionObserver((entries) => {
+            const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!visible) return;
+            navLinks.forEach((link) => {
+                const active = link.getAttribute("href") === `#${visible.target.id}`;
+                if (active) link.setAttribute("aria-current", "true");
+                else link.removeAttribute("aria-current");
+            });
+        }, { rootMargin: "-20% 0px -65%", threshold: [0, 0.25, 0.5] });
+        sections.forEach((section) => sectionObserver.observe(section));
 
-<!-- ========================================================= -->
-<!-- DATASET -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            Dataset
-        </h2>
-
-        <div class="section-text">
-
-            <p>
-                [Describe your dataset.]
-            </p>
-
-            <p>
-                [Dataset statistics, number of sequences,
-                categories, scenes, etc.]
-            </p>
-
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- BibTeX -->
-<!-- ========================================================= -->
-
-<section>
-    <div class="container">
-
-        <h2 class="section-title">
-            BibTeX
-        </h2>
-
-        <div class="bibtex">
-
-<pre>
-@inproceedings{[CITATION_KEY],
-    title     = {[PAPER TITLE]},
-    author    = {[AUTHORS]},
-    booktitle = {[CONFERENCE]},
-    year      = {[YEAR]}
-}
-</pre>
-
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ========================================================= -->
-<!-- FOOTER -->
-<!-- ========================================================= -->
-
-<footer>
-    <div class="container">
-
-        <p>
-            © [YEAR] [AUTHOR / LAB NAME].
-            All rights reserved.
-        </p>
-
-        <p>
-            Website template inspired by
-            <a href="[TEMPLATE_SOURCE_LINK]">
-                [Template Source]
-            </a>.
-        </p>
-
-    </div>
-</footer>
-
-
+        const copyButton = document.getElementById("copy-bibtex");
+        copyButton.addEventListener("click", async () => {
+            const citation = document.getElementById("bibtex").textContent;
+            try {
+                await navigator.clipboard.writeText(citation);
+                copyButton.textContent = "Copied";
+                window.setTimeout(() => { copyButton.textContent = "Copy BibTeX"; }, 1800);
+            } catch {
+                copyButton.textContent = "Select and copy manually";
+            }
+        });
+    </script>
 </body>
 </html>
