@@ -129,7 +129,7 @@
         }
 
         .caption {
-            text-align: center;
+            text-align: justify;
             color: #777;
             font-size: 14px;
             margin-top: 12px;
@@ -334,7 +334,9 @@
              alt="Teaser Figure">
 
         <div class="caption">
-            RE-SELF jointly reconstructs the scene and the wearer's full-body motion from monocular ego video, addressing the self-blind and world-blind limitations of scene-only and motion-only methods, respectively. Furthermore, by leveraging the mutually reinforcing relationship between scene and motion, RE-SELF outperforms methods designed for either task alone..
+            RE-SELF jointly reconstructs the scene and the wearer's full-body motion from monocular ego video, 
+            addressing the self-blind and world-blind limitations of scene-only and motion-only methods, respectively. 
+            Furthermore, by leveraging the mutually reinforcing relationship between scene and motion, RE-SELF outperforms methods designed for either task alone.
         </div>
 
     </div>
@@ -355,9 +357,19 @@
         <div class="section-text">
 
             <p>
-                [Insert your abstract here.]
-                This section should briefly describe the problem,
-                motivation, proposed method, and main results.
+                Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. 
+                Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, 
+                whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. 
+                Joint recovery is challenging because the two tasks exhibit asymmetric visibility and require different prediction paradigms. 
+                The largely visible scene supports deterministic geometric regression, whereas the severely occluded body requires generative motion inference. 
+                We therefore propose RE-SELF (<strong><u>RE</u></strong>constructing the <strong><u>S</u></strong>cene and the s<strong><u>ELF</u></strong>), 
+                a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. 
+                RE-SELF adapts a geometry foundation model pre-trained on large-scale exocentric data to egocentric video using frame-wise scale and relative-pose consistency objectives. 
+                The resulting camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion. 
+                A subsequent closed-loop kinematic feedback stage further refines the camera head while preserving the reconstructed scene geometry. 
+                To support training and evaluation, we curate EE4D-JSM from EgoExo4D by aligning egocentric video, sparse metric scene geometry, camera trajectories, and full-body motion annotations. 
+                Experiments show that RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation. 
+                Code, models, and the dataset will be released.
             </p>
 
             <div class="highlight">
