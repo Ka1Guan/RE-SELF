@@ -25,8 +25,8 @@
             --ours: #c65d2e;
             --ground-truth: #2f7d59;
             --baseline: #356aa0;
-            --page-width: 1080px;
-            --text-width: 740px;
+            --page-width: 1000px;
+            --text-width: 680px;
         }
 
         * { box-sizing: border-box; }
@@ -39,8 +39,8 @@
             color: var(--ink);
             background: #fff;
             font-family: "Inter", Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.5;
             letter-spacing: 0;
             -webkit-font-smoothing: antialiased;
         }
@@ -65,7 +65,7 @@
             position: sticky;
             top: 0;
             z-index: 20;
-            min-height: 54px;
+            min-height: 50px;
             border-bottom: 1px solid rgba(222, 222, 222, 0.88);
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(12px);
@@ -73,10 +73,10 @@
 
         .nav-inner {
             display: flex;
-            min-height: 54px;
+            min-height: 50px;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
+            gap: 18px;
         }
 
         .brand { color: var(--accent); font-weight: 700; }
@@ -84,14 +84,14 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 18px;
             color: var(--muted);
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .nav-links a {
             display: inline-flex;
-            min-height: 44px;
+            min-height: 40px;
             align-items: center;
             border-bottom: 2px solid transparent;
         }
@@ -103,7 +103,7 @@
         }
 
         .hero {
-            padding: 44px 0 28px;
+            padding: 36px 0 22px;
             text-align: center;
         }
 
@@ -118,16 +118,16 @@
         h1 {
             max-width: 900px;
             margin: 0 auto 12px;
-            font-size: 40px;
+            font-size: 36px;
             line-height: 1.16;
             letter-spacing: 0;
         }
 
         .tagline {
             max-width: 800px;
-            margin: 0 auto 20px;
+            margin: 0 auto 16px;
             color: var(--body);
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1.5;
         }
 
@@ -153,22 +153,22 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 9px;
-            margin-top: 20px;
+            margin-top: 16px;
         }
 
         .resource-link,
         .copy-button {
             display: inline-flex;
-            min-height: 44px;
+            min-height: 40px;
             align-items: center;
             justify-content: center;
-            padding: 9px 16px;
+            padding: 7px 14px;
             border: 1px solid var(--ink);
             border-radius: 6px;
             color: #fff;
             background: var(--ink);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
         }
@@ -190,8 +190,8 @@
         }
 
         main section {
-            padding: 42px 0;
-            scroll-margin-top: 54px;
+            padding: 32px 0;
+            scroll-margin-top: 50px;
         }
 
         .band {
@@ -202,14 +202,14 @@
 
         .section-heading {
             margin: 0 0 8px;
-            font-size: 27px;
+            font-size: 24px;
             line-height: 1.25;
             text-align: center;
         }
 
         .section-lead {
             max-width: 720px;
-            margin: 0 auto 25px;
+            margin: 0 auto 20px;
             color: var(--body);
             text-align: center;
         }
@@ -258,9 +258,9 @@
         .teaser-section { padding-top: 12px; }
 
         .core-statement {
-            max-width: 850px;
-            margin: 18px auto 0;
-            font-size: 18px;
+            max-width: 780px;
+            margin: 14px auto 0;
+            font-size: 16px;
             font-weight: 500;
             line-height: 1.55;
             text-align: center;
@@ -351,59 +351,82 @@
         .legend .ours::before { background: var(--ours); }
         .legend .base::before { background: var(--baseline); }
 
-        .benchmark-table-wrap {
-            overflow-x: auto;
+        .benchmark-panels {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            width: min(900px, 100%);
+            margin: 0 auto;
+        }
+
+        .benchmark-panel {
             border-top: 1px solid var(--ink);
             border-bottom: 1px solid var(--ink);
         }
 
-        .benchmark-table {
+        .benchmark-panel h3 {
+            margin: 12px 14px 1px;
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .benchmark-panel > p {
+            margin: 0 14px 9px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .metric-table {
             width: 100%;
-            min-width: 620px;
             border-collapse: collapse;
+            table-layout: fixed;
             font-variant-numeric: tabular-nums;
         }
 
-        .benchmark-table th,
-        .benchmark-table td {
-            padding: 11px 16px;
-            border-bottom: 1px solid var(--line);
+        .metric-table th,
+        .metric-table td {
+            padding: 8px 14px;
+            border-top: 1px solid var(--line);
             text-align: right;
             vertical-align: middle;
         }
 
-        .benchmark-table thead th {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .metric-table th:first-child,
+        .metric-table td:first-child { width: 37%; text-align: left; }
+        .metric-table th:nth-child(2),
+        .metric-table td:nth-child(2) { width: 28%; }
+        .metric-table th:nth-child(3),
+        .metric-table td:nth-child(3) { width: 35%; }
 
-        .benchmark-table th:first-child,
-        .benchmark-table th:nth-child(2),
-        .benchmark-table td:first-child,
-        .benchmark-table td:nth-child(2) { text-align: left; }
-
-        .benchmark-table tbody:last-child tr:last-child > * { border-bottom: 0; }
-        .benchmark-table tbody + tbody tr:first-child > * { border-top: 1px solid var(--ink); }
-
-        .benchmark-task {
-            width: 26%;
-            color: var(--ink);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .benchmark-task span {
-            display: block;
-            margin-top: 2px;
+        .metric-table thead th {
             color: var(--muted);
             font-size: 11px;
-            font-weight: 400;
+            font-weight: 600;
         }
 
-        .benchmark-metric { color: var(--body); font-size: 13px; font-weight: 500; }
-        .benchmark-baseline { color: var(--muted); }
-        .benchmark-ours { color: var(--accent-dark); font-weight: 700; }
+        .metric-table tbody th {
+            color: var(--body);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .metric-table tbody td {
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .metric-table .runner-up { color: var(--muted); font-weight: 500; }
+
+        .metric-table .method-name {
+            display: block;
+            margin-bottom: 1px;
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .metric-table .metric-value { display: block; }
 
         .comparison-legend { margin: 28px 0 12px; }
         .comparison-legend + .qualitative-grid { margin-top: 0; }
@@ -411,8 +434,8 @@
         .qualitative-grid {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            width: min(900px, 100%);
-            gap: 30px;
+            width: min(760px, 100%);
+            gap: 24px;
             margin-top: 30px;
             margin-right: auto;
             margin-left: auto;
@@ -693,27 +716,36 @@
                 <h2 class="section-heading">State-of-the-art world and self reconstruction</h2>
                 <p class="section-lead">RE-SELF improves camera tracking, metric scene depth, body motion, and hand motion under a controlled EE4D-JSM protocol.</p>
 
-                <div class="benchmark-table-wrap">
-                    <table class="benchmark-table" aria-label="EE4D-JSM reconstruction results">
-                        <thead>
-                            <tr><th scope="col">Task</th><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">RE-SELF</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Camera<span>Pi3X · similarity aligned</span></th><td class="benchmark-metric">ATE ↓</td><td class="benchmark-baseline">0.016</td><td class="benchmark-ours">0.012</td></tr>
-                            <tr><td class="benchmark-metric">RPE-t ↓</td><td class="benchmark-baseline">0.015</td><td class="benchmark-ours">0.009</td></tr>
-                            <tr><td class="benchmark-metric">RPE-r ↓</td><td class="benchmark-baseline">0.557</td><td class="benchmark-ours">0.341</td></tr>
-                        </tbody>
-                        <tbody>
-                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Metric geometry<span>Pi3X · absolute scale</span></th><td class="benchmark-metric">ATE ↓</td><td class="benchmark-baseline">0.026</td><td class="benchmark-ours">0.022</td></tr>
-                            <tr><td class="benchmark-metric">RPE-t ↓</td><td class="benchmark-baseline">0.019</td><td class="benchmark-ours">0.010</td></tr>
-                            <tr><td class="benchmark-metric">Depth δ1 ↑</td><td class="benchmark-baseline">86.26</td><td class="benchmark-ours">87.25</td></tr>
-                        </tbody>
-                        <tbody>
-                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Full-body motion<span>UniEgoMotion</span></th><td class="benchmark-metric">HTE ↓</td><td class="benchmark-baseline">0.066</td><td class="benchmark-ours">0.050</td></tr>
-                            <tr><td class="benchmark-metric">MPJPE ↓</td><td class="benchmark-baseline">0.116</td><td class="benchmark-ours">0.110</td></tr>
-                            <tr><td class="benchmark-metric">H-MPJPE ↓</td><td class="benchmark-baseline">0.184</td><td class="benchmark-ours">0.175</td></tr>
-                        </tbody>
-                    </table>
+                <div class="benchmark-panels" aria-label="Key EE4D-JSM reconstruction results">
+                    <section class="benchmark-panel">
+                        <h3>Metric geometry</h3>
+                        <p>Absolute metric scale reconstruction</p>
+                        <table class="metric-table">
+                            <thead><tr><th scope="col">Metric</th><th scope="col">RE-SELF</th><th scope="col">Second best</th></tr></thead>
+                            <tbody>
+                                <tr><th scope="row">ATE ↓</th><td>0.022</td><td class="runner-up"><span class="method-name">Pi3X</span>0.026</td></tr>
+                                <tr><th scope="row">RPE-t ↓</th><td>0.010</td><td class="runner-up"><span class="method-name">Pi3X</span>0.019</td></tr>
+                                <tr><th scope="row">RPE-r ↓</th><td>0.341</td><td class="runner-up"><span class="method-name">Pi3X</span>0.557</td></tr>
+                                <tr><th scope="row">Abs-R ↓</th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
+                                <tr><th scope="row">δ1 ↑</th><td>87.25</td><td class="runner-up"><span class="method-name">Pi3X</span>86.26</td></tr>
+                                <tr><th scope="row">RMSE ↓</th><td>1.528</td><td class="runner-up"><span class="method-name">Pi3X</span>1.549</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section class="benchmark-panel">
+                        <h3>Full-body motion</h3>
+                        <p>Egocentric motion reconstruction</p>
+                        <table class="metric-table">
+                            <thead><tr><th scope="col">Metric</th><th scope="col">RE-SELF</th><th scope="col">Second best</th></tr></thead>
+                            <tbody>
+                                <tr><th scope="row">HRE ↓</th><td>0.268</td><td class="runner-up"><span class="method-name">UEM</span>0.280</td></tr>
+                                <tr><th scope="row">HTE ↓</th><td>0.050</td><td class="runner-up"><span class="method-name">UEM</span>0.066</td></tr>
+                                <tr><th scope="row">MPJPE ↓</th><td>0.110</td><td class="runner-up"><span class="method-name">UEM</span>0.116</td></tr>
+                                <tr><th scope="row">PA-MPJPE ↓</th><td>0.075</td><td class="runner-up"><span class="method-name">UEM</span>0.080</td></tr>
+                                <tr><th scope="row">H-MPJPE ↓</th><td>0.175</td><td class="runner-up"><span class="method-name">UEM</span>0.184</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
                 </div>
 
                 <div class="legend comparison-legend" aria-label="Qualitative comparison legend">
@@ -769,7 +801,7 @@
                 <p class="section-lead">The complete paper summary is available here without interrupting the visual narrative above.</p>
                 <details>
                     <summary>Read the abstract</summary>
-                    <p>Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RE-SELF (<strong><u>RE</u></strong>constructing the <strong><u>S</u></strong>cene and the s<strong><u>ELF</u></strong>, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RE-SELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
+                    <p>Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RE-SELF, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RE-SELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
                 </details>
             </div>
         </section>
