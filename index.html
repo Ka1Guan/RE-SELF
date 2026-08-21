@@ -351,36 +351,62 @@
         .legend .ours::before { background: var(--ours); }
         .legend .base::before { background: var(--baseline); }
 
-        .result-group {
-            display: grid;
-            grid-template-columns: 150px 1fr;
-            gap: 22px;
-            padding: 20px 0;
-            border-top: 1px solid var(--line);
+        .benchmark-table-wrap {
+            overflow-x: auto;
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
         }
 
-        .result-group:last-child { border-bottom: 1px solid var(--line); }
-        .result-label h3 { margin: 0 0 3px; font-size: 17px; }
-        .result-label p { margin: 0; color: var(--muted); font-size: 12px; }
-
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
+        .benchmark-table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: collapse;
+            font-variant-numeric: tabular-nums;
         }
 
-        .metric-name { color: var(--muted); font-size: 12px; }
-
-        .metric-value {
-            margin: 2px 0;
-            font-size: 22px;
-            font-weight: 700;
-            line-height: 1.25;
+        .benchmark-table th,
+        .benchmark-table td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--line);
+            text-align: right;
+            vertical-align: middle;
         }
 
-        .metric-value .from { color: var(--muted); font-size: 14px; font-weight: 500; }
-        .metric-value .to { color: var(--accent); }
-        .metric-note { color: var(--muted); font-size: 11px; }
+        .benchmark-table thead th {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .benchmark-table th:first-child,
+        .benchmark-table th:nth-child(2),
+        .benchmark-table td:first-child,
+        .benchmark-table td:nth-child(2) { text-align: left; }
+
+        .benchmark-table tbody:last-child tr:last-child > * { border-bottom: 0; }
+        .benchmark-table tbody + tbody tr:first-child > * { border-top: 1px solid var(--ink); }
+
+        .benchmark-task {
+            width: 26%;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .benchmark-task span {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        .benchmark-metric { color: var(--body); font-size: 13px; font-weight: 500; }
+        .benchmark-baseline { color: var(--muted); }
+        .benchmark-ours { color: var(--accent-dark); font-weight: 700; }
+
+        .comparison-legend { margin: 28px 0 12px; }
+        .comparison-legend + .qualitative-grid { margin-top: 0; }
 
         .qualitative-grid {
             display: grid;
@@ -508,8 +534,8 @@
             .media-frame.teaser-frame,
             .media-frame.method-frame { aspect-ratio: 4 / 3; }
 
-            .result-group { grid-template-columns: 1fr; gap: 12px; }
-            .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .benchmark-table th,
+            .benchmark-table td { padding: 10px 12px; }
             .qualitative-grid { grid-template-columns: 1fr; }
             .bibtex { padding: 16px; font-size: 11px; }
         }
@@ -653,31 +679,33 @@
                 <h2 class="section-heading">State-of-the-art world and self reconstruction</h2>
                 <p class="section-lead">RE-SELF improves camera tracking, metric scene depth, body motion, and hand motion under a controlled EE4D-JSM protocol.</p>
 
-                <div class="result-group">
-                    <div class="result-label"><h3>Camera</h3><p>Similarity alignment<br>Pi3X → RE-SELF</p></div>
-                    <div class="metrics">
-                        <div><div class="metric-name">ATE ↓</div><div class="metric-value"><span class="from">0.016 →</span> <span class="to">0.012</span></div><div class="metric-note">global trajectory</div></div>
-                        <div><div class="metric-name">RPE-t ↓</div><div class="metric-value"><span class="from">0.015 →</span> <span class="to">0.009</span></div><div class="metric-note">relative translation</div></div>
-                        <div><div class="metric-name">RPE-r ↓</div><div class="metric-value"><span class="from">0.557 →</span> <span class="to">0.341</span></div><div class="metric-note">relative rotation</div></div>
-                    </div>
+                <div class="benchmark-table-wrap">
+                    <table class="benchmark-table" aria-label="EE4D-JSM reconstruction results">
+                        <thead>
+                            <tr><th scope="col">Task</th><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">RE-SELF</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Camera<span>Pi3X · similarity aligned</span></th><td class="benchmark-metric">ATE ↓</td><td class="benchmark-baseline">0.016</td><td class="benchmark-ours">0.012</td></tr>
+                            <tr><td class="benchmark-metric">RPE-t ↓</td><td class="benchmark-baseline">0.015</td><td class="benchmark-ours">0.009</td></tr>
+                            <tr><td class="benchmark-metric">RPE-r ↓</td><td class="benchmark-baseline">0.557</td><td class="benchmark-ours">0.341</td></tr>
+                        </tbody>
+                        <tbody>
+                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Metric geometry<span>Pi3X · absolute scale</span></th><td class="benchmark-metric">ATE ↓</td><td class="benchmark-baseline">0.026</td><td class="benchmark-ours">0.022</td></tr>
+                            <tr><td class="benchmark-metric">RPE-t ↓</td><td class="benchmark-baseline">0.019</td><td class="benchmark-ours">0.010</td></tr>
+                            <tr><td class="benchmark-metric">Depth δ1 ↑</td><td class="benchmark-baseline">86.26</td><td class="benchmark-ours">87.25</td></tr>
+                        </tbody>
+                        <tbody>
+                            <tr><th class="benchmark-task" scope="rowgroup" rowspan="3">Full-body motion<span>UniEgoMotion</span></th><td class="benchmark-metric">HTE ↓</td><td class="benchmark-baseline">0.066</td><td class="benchmark-ours">0.050</td></tr>
+                            <tr><td class="benchmark-metric">MPJPE ↓</td><td class="benchmark-baseline">0.116</td><td class="benchmark-ours">0.110</td></tr>
+                            <tr><td class="benchmark-metric">H-MPJPE ↓</td><td class="benchmark-baseline">0.184</td><td class="benchmark-ours">0.175</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="result-group">
-                    <div class="result-label"><h3>Metric geometry</h3><p>Absolute scale<br>Pi3X → RE-SELF</p></div>
-                    <div class="metrics">
-                        <div><div class="metric-name">ATE ↓</div><div class="metric-value"><span class="from">0.026 →</span> <span class="to">0.022</span></div><div class="metric-note">meters</div></div>
-                        <div><div class="metric-name">RPE-t ↓</div><div class="metric-value"><span class="from">0.019 →</span> <span class="to">0.010</span></div><div class="metric-note">meters</div></div>
-                        <div><div class="metric-name">Depth δ1 ↑</div><div class="metric-value"><span class="from">86.26 →</span> <span class="to">87.25</span></div><div class="metric-note">percent</div></div>
-                    </div>
-                </div>
-
-                <div class="result-group">
-                    <div class="result-label"><h3>Full-body motion</h3><p>UEM → RE-SELF</p></div>
-                    <div class="metrics">
-                        <div><div class="metric-name">HTE ↓</div><div class="metric-value"><span class="from">0.066 →</span> <span class="to">0.050</span></div><div class="metric-note">global head translation</div></div>
-                        <div><div class="metric-name">MPJPE ↓</div><div class="metric-value"><span class="from">0.116 →</span> <span class="to">0.110</span></div><div class="metric-note">22 body joints</div></div>
-                        <div><div class="metric-name">H-MPJPE ↓</div><div class="metric-value"><span class="from">0.184 →</span> <span class="to">0.175</span></div><div class="metric-note">30 hand joints</div></div>
-                    </div>
+                <div class="legend comparison-legend" aria-label="Qualitative comparison legend">
+                    <span class="gt">GT</span>
+                    <span class="base">UniEgoMotion</span>
+                    <span class="ours">RE-SELF</span>
                 </div>
 
                 <div class="qualitative-grid">
