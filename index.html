@@ -410,12 +410,26 @@
 
         .qualitative-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
+            grid-template-columns: minmax(0, 1fr);
+            width: min(900px, 100%);
+            gap: 30px;
             margin-top: 30px;
+            margin-right: auto;
+            margin-left: auto;
         }
 
         .qualitative-grid figure { margin: 0; }
+
+        .comparison-frame {
+            aspect-ratio: auto;
+            overflow: visible;
+        }
+
+        .comparison-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
 
         .dataset-layout {
             display: grid;
@@ -536,7 +550,7 @@
 
             .benchmark-table th,
             .benchmark-table td { padding: 10px 12px; }
-            .qualitative-grid { grid-template-columns: 1fr; }
+            .qualitative-grid { gap: 24px; }
             .bibtex { padding: 16px; font-size: 11px; }
         }
 
@@ -568,20 +582,20 @@
             <p class="tagline"><strong>RE-SELF</strong> jointly reconstructs metric 3D scene geometry, camera motion, and the unseen wearer's full-body motion from a monocular egocentric video.</p>
 
             <div class="authors">
-                <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2,*</sup>,
-                <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2,*</sup>,
+                <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2,†</sup>,
+                <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2,†</sup>,
                 <a href="[AUTHOR_LINK_3]">Liruichen Wang</a><sup>2</sup>,
-                <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,†</sup>,
-                <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,†</sup>
+                <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,*</sup>,
+                <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,*</sup>
             </div>
             <p class="affiliations">
                 <sup>1</sup>The Hong Kong Polytechnic University
                 &nbsp;&nbsp;
                 <sup>2</sup>Eastern Institute of Technology, Ningbo
                 &nbsp;&nbsp;
-                <sup>*</sup>Equal contribution
+                <sup>†</sup>Equal contribution
                 &nbsp;&nbsp;
-                <sup>†</sup>Corresponding authors
+                <sup>*</sup>Corresponding authors
             </p>
             <div class="resource-row" aria-label="Project resources">
                 <a class="resource-link" href="https://ka1guan.github.io/RE-SELF/#overview">arXiv</a>
@@ -710,11 +724,11 @@
 
                 <div class="qualitative-grid">
                     <figure>
-                        <div class="media-frame result-frame" data-placeholder="Add a local articulation comparison"><img src="assets/fig_motion1.png" alt="Qualitative comparison of UniEgoMotion and RE-SELF body articulation." loading="lazy"></div>
+                        <div class="media-frame comparison-frame" data-placeholder="Add a local articulation comparison"><img src="assets/fig_motion1.png" alt="Qualitative comparison of UniEgoMotion and RE-SELF body articulation." loading="lazy"></div>
                         <figcaption class="caption"><strong>Local articulation.</strong> Geometry context improves body and hand pose under severe self-occlusion.</figcaption>
                     </figure>
                     <figure>
-                        <div class="media-frame result-frame" data-placeholder="Add a global trajectory comparison"><img src="assets/fig_motion2.png" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
+                        <div class="media-frame comparison-frame" data-placeholder="Add a global trajectory comparison"><img src="assets/fig_motion2.png" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
                         <figcaption class="caption"><strong>Global alignment.</strong> Metric camera conditioning reduces root drift and better aligns motion with the scene.</figcaption>
                     </figure>
                 </div>
