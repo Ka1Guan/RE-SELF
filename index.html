@@ -194,6 +194,21 @@
             scroll-margin-top: 50px;
         }
 
+        /* Keep the visual narrative compact and in reading order. */
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #overview { order: 1; }
+        #abstract { order: 2; }
+        #method { order: 3; }
+        #results { order: 4; }
+        #demo { order: 5; }
+        #dataset { order: 6; }
+        #ablation { order: 7; }
+        #citation { order: 8; }
+
         .band {
             border-top: 1px solid var(--line);
             border-bottom: 1px solid var(--line);
@@ -589,10 +604,11 @@
         <div class="container nav-inner">
             <a class="brand" href="#top">RE-SELF</a>
             <div class="nav-links">
-                <a href="#overview">Overview</a>
+                <a href="#overview">TL;DR</a>
+                <a href="#abstract">Abstract</a>
                 <a href="#method">Method</a>
                 <a href="#results">Results</a>
-                <a href="#dataset">Dataset</a>
+                <a href="#demo">Demo</a>
                 <a href="#citation">Citation</a>
             </div>
         </div>
@@ -644,8 +660,8 @@
 
         <section class="band" id="overview">
             <div class="container">
-                <h2 class="section-heading">One video, two complementary blind spots</h2>
-                <p class="section-lead">Existing approaches solve only one side of complete egocentric 3D perception.</p>
+                <h2 class="section-heading">TL;DR</h2>
+                <p class="section-lead">RE-SELF jointly reconstructs the world and the unseen self from a single egocentric video.</p>
                 <div class="problem-grid">
                     <article class="problem-item">
                         <span class="eyebrow">Scene reconstruction</span>
