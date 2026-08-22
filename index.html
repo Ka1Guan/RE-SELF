@@ -253,6 +253,144 @@
 
         .media-frame video { background: #111; }
 
+        .demo-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            width: min(940px, 100%);
+            margin: 0 auto 16px;
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: #fff;
+        }
+
+        .demo-selector label {
+            color: var(--body);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .demo-selector select {
+            min-width: 230px;
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            color: var(--ink);
+            background: #fff;
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .demo-stage {
+            width: min(940px, 100%);
+            margin: 0 auto;
+        }
+
+        .demo-main-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .demo-card {
+            min-width: 0;
+            margin: 0;
+        }
+
+        .demo-card h3 {
+            margin: 0 0 6px;
+            color: var(--ink);
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        .demo-video-frame {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #111;
+            aspect-ratio: 16 / 9;
+        }
+
+        .demo-video-frame video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .demo-video-frame[data-label]::after {
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            content: attr(data-label);
+            font-size: 10px;
+            line-height: 1.2;
+            pointer-events: none;
+        }
+
+        .demo-video-frame video:not([src]) { opacity: 0; }
+
+        .demo-support-grid {
+            display: grid;
+            grid-template-columns: minmax(150px, 0.9fr) minmax(0, 2.1fr);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .demo-gt .demo-video-frame { aspect-ratio: 4 / 3; }
+
+        .demo-exo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .demo-exo-grid .demo-video-frame { aspect-ratio: 16 / 9; }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: auto auto 1fr auto;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--soft);
+        }
+
+        .demo-controls button {
+            min-height: 32px;
+            padding: 5px 11px;
+            border: 1px solid var(--ink);
+            border-radius: 5px;
+            color: #fff;
+            background: var(--ink);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .demo-controls button:hover { background: var(--accent); }
+
+        .demo-progress { width: 100%; accent-color: var(--accent); }
+        .demo-time { min-width: 70px; color: var(--muted); font-size: 11px; text-align: right; }
+
+        .demo-note {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
         .media-frame.is-missing::after {
             content: attr(data-placeholder);
             padding: 24px;
@@ -586,6 +724,14 @@
             .media-frame.teaser-frame,
             .media-frame.method-frame { aspect-ratio: 4 / 3; }
 
+            .demo-selector,
+            .demo-controls { grid-template-columns: 1fr; }
+            .demo-selector { align-items: stretch; flex-direction: column; gap: 7px; }
+            .demo-selector select { width: 100%; min-width: 0; }
+            .demo-main-grid,
+            .demo-support-grid { grid-template-columns: 1fr; }
+            .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
             .benchmark-table th,
             .benchmark-table td { padding: 10px 12px; }
             .qualitative-grid { gap: 24px; }
@@ -717,12 +863,54 @@
         <section class="band" id="demo">
             <div class="container">
                 <h2 class="section-heading">Joint reconstruction in action</h2>
-                <p class="section-lead">Compare the input video with the recovered scene, camera trajectory, and temporally coherent full-body motion.</p>
-                <div class="media-frame result-frame" data-placeholder="Add the main project video">
-                    <video controls preload="metadata" playsinline poster="[VIDEO_POSTER]">
-                        <source src="[VIDEO_LINK]" type="video/mp4">
-                        Your browser does not support HTML video.
-                    </video>
+                <p class="section-lead">Select a scene to synchronously compare the egocentric input, RE-SELF reconstruction, ground-truth motion, and four exocentric views.</p>
+
+                <div class="demo-selector">
+                    <label for="demo-scene">Choose a demonstration scene</label>
+                    <select id="demo-scene" aria-label="Choose a demonstration scene">
+                        <option value="sample-01">Sample 01</option>
+                        <option value="sample-02">Sample 02</option>
+                        <option value="sample-03">Sample 03</option>
+                        <option value="sample-04">Sample 04</option>
+                        <option value="sample-05">Sample 05</option>
+                    </select>
+                </div>
+
+                <div class="demo-stage" aria-live="polite">
+                    <div class="demo-main-grid">
+                        <figure class="demo-card">
+                            <h3>Input video (egocentric)</h3>
+                            <div class="demo-video-frame"><video id="demo-input" muted playsinline preload="metadata"></video></div>
+                        </figure>
+                        <figure class="demo-card">
+                            <h3>RE-SELF reconstruction</h3>
+                            <div class="demo-video-frame"><video id="demo-reconstruction" muted playsinline preload="metadata"></video></div>
+                        </figure>
+                    </div>
+
+                    <div class="demo-support-grid">
+                        <figure class="demo-card demo-gt">
+                            <h3>GT motion</h3>
+                            <div class="demo-video-frame"><video id="demo-gt" muted playsinline preload="metadata"></video></div>
+                        </figure>
+                        <div class="demo-card">
+                            <h3>Exocentric views</h3>
+                            <div class="demo-exo-grid">
+                                <div class="demo-video-frame" data-label="Exo 1"><video id="demo-exo-01" muted playsinline preload="metadata" aria-label="Exocentric view 1"></video></div>
+                                <div class="demo-video-frame" data-label="Exo 2"><video id="demo-exo-02" muted playsinline preload="metadata" aria-label="Exocentric view 2"></video></div>
+                                <div class="demo-video-frame" data-label="Exo 3"><video id="demo-exo-03" muted playsinline preload="metadata" aria-label="Exocentric view 3"></video></div>
+                                <div class="demo-video-frame" data-label="Exo 4"><video id="demo-exo-04" muted playsinline preload="metadata" aria-label="Exocentric view 4"></video></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-controls" aria-label="Synchronized video controls">
+                        <button id="demo-play" type="button">Play all</button>
+                        <button id="demo-reset" type="button">Reset</button>
+                        <input class="demo-progress" id="demo-progress" type="range" min="0" max="1" step="0.01" value="0" aria-label="Demo video timeline">
+                        <span class="demo-time" id="demo-time">0:00 / 0:00</span>
+                    </div>
+                    <p class="demo-note">All seven videos are synchronized. Use the controls below the main views to play, pause, reset, or scrub the selected scene.</p>
                 </div>
             </div>
         </section>
@@ -852,6 +1040,168 @@
             image.addEventListener("error", markMissing);
             if (image.complete && image.naturalWidth === 0) markMissing();
         });
+
+        // Demo videos are expected under assets/demo/sample-01 ... sample-05.
+        // Change only the paths below if the uploaded files use different names.
+        const demoScenes = {
+            "sample-01": {
+                label: "Sample 01",
+                input: "assets/demo/sample-01/input.mp4",
+                reconstruction: "assets/demo/sample-01/reconstruction.mp4",
+                gt: "assets/demo/sample-01/gt-motion.mp4",
+                exo: [
+                    "assets/demo/sample-01/exo-01.mp4",
+                    "assets/demo/sample-01/exo-02.mp4",
+                    "assets/demo/sample-01/exo-03.mp4",
+                    "assets/demo/sample-01/exo-04.mp4",
+                ],
+            },
+            "sample-02": {
+                label: "Sample 02",
+                input: "assets/demo/sample-02/input.mp4",
+                reconstruction: "assets/demo/sample-02/reconstruction.mp4",
+                gt: "assets/demo/sample-02/gt-motion.mp4",
+                exo: [
+                    "assets/demo/sample-02/exo-01.mp4",
+                    "assets/demo/sample-02/exo-02.mp4",
+                    "assets/demo/sample-02/exo-03.mp4",
+                    "assets/demo/sample-02/exo-04.mp4",
+                ],
+            },
+            "sample-03": {
+                label: "Sample 03",
+                input: "assets/demo/sample-03/input.mp4",
+                reconstruction: "assets/demo/sample-03/reconstruction.mp4",
+                gt: "assets/demo/sample-03/gt-motion.mp4",
+                exo: [
+                    "assets/demo/sample-03/exo-01.mp4",
+                    "assets/demo/sample-03/exo-02.mp4",
+                    "assets/demo/sample-03/exo-03.mp4",
+                    "assets/demo/sample-03/exo-04.mp4",
+                ],
+            },
+            "sample-04": {
+                label: "Sample 04",
+                input: "assets/demo/sample-04/input.mp4",
+                reconstruction: "assets/demo/sample-04/reconstruction.mp4",
+                gt: "assets/demo/sample-04/gt-motion.mp4",
+                exo: [
+                    "assets/demo/sample-04/exo-01.mp4",
+                    "assets/demo/sample-04/exo-02.mp4",
+                    "assets/demo/sample-04/exo-03.mp4",
+                    "assets/demo/sample-04/exo-04.mp4",
+                ],
+            },
+            "sample-05": {
+                label: "Sample 05",
+                input: "assets/demo/sample-05/input.mp4",
+                reconstruction: "assets/demo/sample-05/reconstruction.mp4",
+                gt: "assets/demo/sample-05/gt-motion.mp4",
+                exo: [
+                    "assets/demo/sample-05/exo-01.mp4",
+                    "assets/demo/sample-05/exo-02.mp4",
+                    "assets/demo/sample-05/exo-03.mp4",
+                    "assets/demo/sample-05/exo-04.mp4",
+                ],
+            },
+        };
+
+        const demoVideoIds = ["demo-input", "demo-reconstruction", "demo-gt", "demo-exo-01", "demo-exo-02", "demo-exo-03", "demo-exo-04"];
+        const demoVideos = demoVideoIds.map((id) => document.getElementById(id));
+        const demoSceneSelect = document.getElementById("demo-scene");
+        const demoPlayButton = document.getElementById("demo-play");
+        const demoResetButton = document.getElementById("demo-reset");
+        const demoProgress = document.getElementById("demo-progress");
+        const demoTime = document.getElementById("demo-time");
+        let demoSyncing = false;
+
+        const formatDemoTime = (seconds) => {
+            if (!Number.isFinite(seconds)) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            const remainder = Math.floor(seconds % 60).toString().padStart(2, "0");
+            return `${minutes}:${remainder}`;
+        };
+
+        const demoDuration = () => {
+            const durations = demoVideos.map((video) => video.duration).filter(Number.isFinite);
+            return durations.length ? Math.min(...durations) : 0;
+        };
+
+        const updateDemoControls = (time = demoVideos[0].currentTime || 0) => {
+            const duration = demoDuration();
+            demoProgress.max = duration || 1;
+            demoProgress.value = Math.min(time, duration || 1);
+            demoTime.textContent = `${formatDemoTime(time)} / ${formatDemoTime(duration)}`;
+        };
+
+        const syncDemoTime = (time) => {
+            if (demoSyncing) return;
+            demoSyncing = true;
+            demoVideos.forEach((video) => {
+                if (Number.isFinite(video.duration) && Math.abs(video.currentTime - time) > 0.08) {
+                    video.currentTime = Math.min(time, video.duration);
+                }
+            });
+            demoSyncing = false;
+            updateDemoControls(time);
+        };
+
+        const setDemoSource = (video, source) => {
+            video.pause();
+            video.removeAttribute("src");
+            video.load();
+            video.src = source;
+            video.load();
+        };
+
+        const loadDemoScene = (sceneId) => {
+            const scene = demoScenes[sceneId];
+            if (!scene) return;
+            setDemoSource(demoVideos[0], scene.input);
+            setDemoSource(demoVideos[1], scene.reconstruction);
+            setDemoSource(demoVideos[2], scene.gt);
+            scene.exo.forEach((source, index) => setDemoSource(demoVideos[index + 3], source));
+            demoVideos.forEach((video) => { video.currentTime = 0; });
+            demoPlayButton.textContent = "Play all";
+            updateDemoControls(0);
+        };
+
+        const playAllDemoVideos = async () => {
+            const playRequests = demoVideos.map((video) => video.play().catch(() => null));
+            await Promise.all(playRequests);
+            demoPlayButton.textContent = "Pause all";
+        };
+
+        const pauseAllDemoVideos = () => {
+            demoVideos.forEach((video) => video.pause());
+            demoPlayButton.textContent = "Play all";
+        };
+
+        demoVideos.forEach((video) => {
+            video.addEventListener("loadedmetadata", () => updateDemoControls(video.currentTime));
+            video.addEventListener("timeupdate", () => {
+                if (video === demoVideos[0]) syncDemoTime(video.currentTime);
+            });
+            video.addEventListener("play", () => {
+                if (video === demoVideos[0]) playAllDemoVideos();
+            });
+            video.addEventListener("pause", () => {
+                if (video === demoVideos[0] && !demoSyncing) pauseAllDemoVideos();
+            });
+        });
+
+        demoSceneSelect.addEventListener("change", () => loadDemoScene(demoSceneSelect.value));
+        demoPlayButton.addEventListener("click", () => {
+            if (demoVideos[0].paused) playAllDemoVideos();
+            else pauseAllDemoVideos();
+        });
+        demoResetButton.addEventListener("click", () => {
+            pauseAllDemoVideos();
+            demoVideos.forEach((video) => { video.currentTime = 0; });
+            updateDemoControls(0);
+        });
+        demoProgress.addEventListener("input", () => syncDemoTime(Number(demoProgress.value)));
+        loadDemoScene(demoSceneSelect.value);
 
         const navLinks = [...document.querySelectorAll(".nav-links a")];
         const sections = navLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
