@@ -344,11 +344,16 @@
 
         .demo-support-grid {
             display: grid;
-            grid-template-columns: minmax(210px, 0.9fr) minmax(360px, 1.5fr);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.28fr);
             align-items: start;
-            gap: 12px;
-            width: min(690px, 100%);
-            margin: 14px auto 0;
+            gap: 14px;
+            width: 100%;
+            margin-top: 14px;
+        }
+
+        .demo-gt {
+            width: min(78%, 390px);
+            justify-self: center;
         }
 
         .demo-gt .demo-video-frame { aspect-ratio: 1.18 / 1; }
@@ -736,7 +741,8 @@
             .demo-selector select { width: 100%; min-width: 0; }
             .demo-main-grid,
             .demo-support-grid { grid-template-columns: 1fr; }
-            .demo-support-grid { width: min(430px, 100%); }
+            .demo-support-grid { width: min(430px, 100%); margin-right: auto; margin-left: auto; }
+            .demo-gt { width: min(82%, 350px); }
             .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
             .benchmark-table th,
@@ -875,11 +881,11 @@
                 <div class="demo-selector">
                     <label for="demo-scene">Choose a demonstration scene</label>
                     <select id="demo-scene" aria-label="Choose a demonstration scene">
-                        <option value="sample-01-cooking">Cooking</option>
-                        <option value="sample-02-basketball">Basketball</option>
-                        <option value="sample-03-soccer">Soccer</option>
-                        <option value="sample-04-dance">Dance</option>
-                        <option value="sample-05-piano">Piano</option>
+                        <option value="sample-01-cooking">Sample-1-Cooking</option>
+                        <option value="sample-02-basketball">Sample-2-Basketball</option>
+                        <option value="sample-03-soccer">Sample-3-Soccer</option>
+                        <option value="sample-04-dance">Sample-4-Dance</option>
+                        <option value="sample-05-piano">Sample-5-Piano</option>
                     </select>
                 </div>
 
@@ -896,10 +902,6 @@
                     </div>
 
                     <div class="demo-support-grid">
-                        <figure class="demo-card demo-gt">
-                            <h3>GT motion</h3>
-                            <div class="demo-video-frame"><video id="demo-gt" muted playsinline preload="metadata"></video></div>
-                        </figure>
                         <div class="demo-card">
                             <h3>Exocentric views</h3>
                             <div class="demo-exo-grid">
@@ -909,6 +911,10 @@
                                 <div class="demo-video-frame" data-label="Exo 4"><video id="demo-exo-04" muted playsinline preload="metadata" aria-label="Exocentric view 4"></video></div>
                             </div>
                         </div>
+                        <figure class="demo-card demo-gt">
+                            <h3>GT motion</h3>
+                            <div class="demo-video-frame"><video id="demo-gt" muted playsinline preload="metadata"></video></div>
+                        </figure>
                     </div>
 
                     <div class="demo-controls" aria-label="Synchronized video controls">
