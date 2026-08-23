@@ -868,11 +868,11 @@
                 <div class="demo-selector">
                     <label for="demo-scene">Choose a demonstration scene</label>
                     <select id="demo-scene" aria-label="Choose a demonstration scene">
-                        <option value="sample-01">IIITH cooking</option>
-                        <option value="sample-02">UNC basketball</option>
-                        <option value="sample-03">UNC soccer</option>
-                        <option value="sample-04">Uniandes dance</option>
-                        <option value="sample-05">UPenn piano</option>
+                        <option value="sample-01-cooking">Cooking</option>
+                        <option value="sample-02-basketball">Basketball</option>
+                        <option value="sample-03-soccer">Soccer</option>
+                        <option value="sample-04-dance">Dance</option>
+                        <option value="sample-05-piano">Piano</option>
                     </select>
                 </div>
 
@@ -1041,67 +1041,67 @@
             if (image.complete && image.naturalWidth === 0) markMissing();
         });
 
-        // Demo videos are expected under demo_videos/sample-01 ... sample-05.
+        // Demo videos are expected under demo_videos/sample-01-cooking ... sample-05-piano.
         // Change only the paths below if the uploaded files use different names.
         const demoScenes = {
-            "sample-01": {
+            "sample-01-cooking": {
                 label: "Sample 01",
-                input: "demo_videos/sample-01/input.mp4",
-                reconstruction: "demo_videos/sample-01/reconstruction.mp4",
-                gt: "demo_videos/sample-01/gt-motion.mp4",
+                input: "demo_videos/sample-01-cooking/input.mp4",
+                reconstruction: "demo_videos/sample-01-cooking/reconstruction.mp4",
+                gt: "demo_videos/sample-01-cooking/gt-motion.mp4",
                 exo: [
-                    "demo_videos/sample-01/exo-01.mp4",
-                    "demo_videos/sample-01/exo-02.mp4",
-                    "demo_videos/sample-01/exo-03.mp4",
-                    "demo_videos/sample-01/exo-04.mp4",
+                    "demo_videos/sample-01-cooking/exo-01.mp4",
+                    "demo_videos/sample-01-cooking/exo-02.mp4",
+                    "demo_videos/sample-01-cooking/exo-03.mp4",
+                    "demo_videos/sample-01-cooking/exo-04.mp4",
                 ],
             },
-            "sample-02": {
+            "sample-02-basketball": {
                 label: "Sample 02",
-                input: "demo_videos/sample-02/input.mp4",
-                reconstruction: "demo_videos/sample-02/reconstruction.mp4",
-                gt: "demo_videos/sample-02/gt-motion.mp4",
+                input: "demo_videos/sample-02-basketball/input.mp4",
+                reconstruction: "demo_videos/sample-02-basketball/reconstruction.mp4",
+                gt: "demo_videos/sample-02-basketball/gt-motion.mp4",
                 exo: [
-                    "demo_videos/sample-02/exo-01.mp4",
-                    "demo_videos/sample-02/exo-02.mp4",
-                    "demo_videos/sample-02/exo-03.mp4",
-                    "demo_videos/sample-02/exo-04.mp4",
+                    "demo_videos/sample-02-basketball/exo-01.mp4",
+                    "demo_videos/sample-02-basketball/exo-02.mp4",
+                    "demo_videos/sample-02-basketball/exo-03.mp4",
+                    "demo_videos/sample-02-basketball/exo-04.mp4",
                 ],
             },
-            "sample-03": {
+            "sample-03-soccer": {
                 label: "Sample 03",
-                input: "demo_videos/sample-03/input.mp4",
-                reconstruction: "demo_videos/sample-03/reconstruction.mp4",
-                gt: "demo_videos/sample-03/gt-motion.mp4",
+                input: "demo_videos/sample-03-soccer/input.mp4",
+                reconstruction: "demo_videos/sample-03-soccer/reconstruction.mp4",
+                gt: "demo_videos/sample-03-soccer/gt-motion.mp4",
                 exo: [
-                    "demo_videos/sample-03/exo-01.mp4",
-                    "demo_videos/sample-03/exo-02.mp4",
-                    "demo_videos/sample-03/exo-03.mp4",
-                    "demo_videos/sample-03/exo-04.mp4",
+                    "demo_videos/sample-03-soccer/exo-01.mp4",
+                    "demo_videos/sample-03-soccer/exo-02.mp4",
+                    "demo_videos/sample-03-soccer/exo-03.mp4",
+                    "demo_videos/sample-03-soccer/exo-04.mp4",
                 ],
             },
-            "sample-04": {
+            "sample-04-dance": {
                 label: "Sample 04",
-                input: "demo_videos/sample-04/input.mp4",
-                reconstruction: "demo_videos/sample-04/reconstruction.mp4",
-                gt: "demo_videos/sample-04/gt-motion.mp4",
+                input: "demo_videos/sample-04-dance/input.mp4",
+                reconstruction: "demo_videos/sample-04-dance/reconstruction.mp4",
+                gt: "demo_videos/sample-04-dance/gt-motion.mp4",
                 exo: [
-                    "demo_videos/sample-04/exo-01.mp4",
-                    "demo_videos/sample-04/exo-02.mp4",
-                    "demo_videos/sample-04/exo-03.mp4",
-                    "demo_videos/sample-04/exo-04.mp4",
+                    "demo_videos/sample-04-dance/exo-01.mp4",
+                    "demo_videos/sample-04-dance/exo-02.mp4",
+                    "demo_videos/sample-04-dance/exo-03.mp4",
+                    "demo_videos/sample-04-dance/exo-04.mp4",
                 ],
             },
-            "sample-05": {
+            "sample-05-piano": {
                 label: "Sample 05",
-                input: "demo_videos/sample-05/input.mp4",
-                reconstruction: "demo_videos/sample-05/reconstruction.mp4",
-                gt: "demo_videos/sample-05/gt-motion.mp4",
+                input: "demo_videos/sample-05-piano/input.mp4",
+                reconstruction: "demo_videos/sample-05-piano/reconstruction.mp4",
+                gt: "demo_videos/sample-05-piano/gt-motion.mp4",
                 exo: [
-                    "demo_videos/sample-05/exo-01.mp4",
-                    "demo_videos/sample-05/exo-02.mp4",
-                    "demo_videos/sample-05/exo-03.mp4",
-                    "demo_videos/sample-05/exo-04.mp4",
+                    "demo_videos/sample-05-piano/exo-01.mp4",
+                    "demo_videos/sample-05-piano/exo-02.mp4",
+                    "demo_videos/sample-05-piano/exo-03.mp4",
+                    "demo_videos/sample-05-piano/exo-04.mp4",
                 ],
             },
         };
