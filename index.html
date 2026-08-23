@@ -344,16 +344,16 @@
 
         .demo-support-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1.28fr);
-            align-items: start;
+            grid-template-columns: minmax(0, 1.42fr) minmax(260px, 0.86fr);
+            align-items: end;
             gap: 14px;
             width: 100%;
             margin-top: 14px;
         }
 
         .demo-gt {
-            width: min(78%, 390px);
-            justify-self: center;
+            width: min(88%, 320px);
+            justify-self: end;
         }
 
         .demo-gt .demo-video-frame { aspect-ratio: 1.18 / 1; }
@@ -742,7 +742,7 @@
             .demo-main-grid,
             .demo-support-grid { grid-template-columns: 1fr; }
             .demo-support-grid { width: min(430px, 100%); margin-right: auto; margin-left: auto; }
-            .demo-gt { width: min(82%, 350px); }
+            .demo-gt { width: min(78%, 320px); justify-self: center; }
             .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
             .benchmark-table th,
