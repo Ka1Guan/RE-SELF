@@ -284,13 +284,14 @@
         }
 
         .demo-stage {
-            width: min(940px, 100%);
+            width: min(900px, 100%);
             margin: 0 auto;
         }
 
         .demo-main-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.28fr);
+            align-items: end;
             gap: 14px;
         }
 
@@ -314,6 +315,9 @@
             background: #111;
             aspect-ratio: 16 / 9;
         }
+
+        .demo-input .demo-video-frame { aspect-ratio: 1 / 1; }
+        .demo-reconstruction .demo-video-frame { aspect-ratio: 1.28 / 1; }
 
         .demo-video-frame video {
             display: block;
@@ -340,17 +344,19 @@
 
         .demo-support-grid {
             display: grid;
-            grid-template-columns: minmax(150px, 0.9fr) minmax(0, 2.1fr);
-            gap: 14px;
-            margin-top: 14px;
+            grid-template-columns: minmax(210px, 0.9fr) minmax(360px, 1.5fr);
+            align-items: start;
+            gap: 12px;
+            width: min(690px, 100%);
+            margin: 14px auto 0;
         }
 
-        .demo-gt .demo-video-frame { aspect-ratio: 4 / 3; }
+        .demo-gt .demo-video-frame { aspect-ratio: 1.18 / 1; }
 
         .demo-exo-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
+            gap: 8px;
         }
 
         .demo-exo-grid .demo-video-frame { aspect-ratio: 16 / 9; }
@@ -730,6 +736,7 @@
             .demo-selector select { width: 100%; min-width: 0; }
             .demo-main-grid,
             .demo-support-grid { grid-template-columns: 1fr; }
+            .demo-support-grid { width: min(430px, 100%); }
             .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
             .benchmark-table th,
@@ -878,11 +885,11 @@
 
                 <div class="demo-stage" aria-live="polite">
                     <div class="demo-main-grid">
-                        <figure class="demo-card">
+                        <figure class="demo-card demo-input">
                             <h3>Input video (egocentric)</h3>
                             <div class="demo-video-frame"><video id="demo-input" muted playsinline preload="metadata"></video></div>
                         </figure>
-                        <figure class="demo-card">
+                        <figure class="demo-card demo-reconstruction">
                             <h3>RE-SELF reconstruction</h3>
                             <div class="demo-video-frame"><video id="demo-reconstruction" muted playsinline preload="metadata"></video></div>
                         </figure>
@@ -1127,6 +1134,12 @@
             return durations.length ? Math.min(...durations) : 0;
         };
 
+        const updateDemoFrameAspect = (video) => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                video.parentElement.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+            }
+        };
+
         const updateDemoControls = (time = demoVideos[0].currentTime || 0) => {
             const duration = demoDuration();
             demoProgress.max = duration || 1;
@@ -1178,7 +1191,10 @@
         };
 
         demoVideos.forEach((video) => {
-            video.addEventListener("loadedmetadata", () => updateDemoControls(video.currentTime));
+            video.addEventListener("loadedmetadata", () => {
+                updateDemoFrameAspect(video);
+                updateDemoControls(video.currentTime);
+            });
             video.addEventListener("timeupdate", () => {
                 if (video === demoVideos[0]) syncDemoTime(video.currentTime);
             });
