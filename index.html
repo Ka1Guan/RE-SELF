@@ -868,11 +868,11 @@
                 <div class="demo-selector">
                     <label for="demo-scene">Choose a demonstration scene</label>
                     <select id="demo-scene" aria-label="Choose a demonstration scene">
-                        <option value="sample-01">Sample 01</option>
-                        <option value="sample-02">Sample 02</option>
-                        <option value="sample-03">Sample 03</option>
-                        <option value="sample-04">Sample 04</option>
-                        <option value="sample-05">Sample 05</option>
+                        <option value="sample-01">IIITH cooking</option>
+                        <option value="sample-02">UNC basketball</option>
+                        <option value="sample-03">UNC soccer</option>
+                        <option value="sample-04">Uniandes dance</option>
+                        <option value="sample-05">UPenn piano</option>
                     </select>
                 </div>
 
@@ -1041,67 +1041,67 @@
             if (image.complete && image.naturalWidth === 0) markMissing();
         });
 
-        // Demo videos are expected under assets/demo/sample-01 ... sample-05.
+        // Demo videos are expected under demo_videos/sample-01 ... sample-05.
         // Change only the paths below if the uploaded files use different names.
         const demoScenes = {
             "sample-01": {
                 label: "Sample 01",
-                input: "assets/demo/sample-01/input.mp4",
-                reconstruction: "assets/demo/sample-01/reconstruction.mp4",
-                gt: "assets/demo/sample-01/gt-motion.mp4",
+                input: "demo_videos/sample-01/input.mp4",
+                reconstruction: "demo_videos/sample-01/reconstruction.mp4",
+                gt: "demo_videos/sample-01/gt-motion.mp4",
                 exo: [
-                    "assets/demo/sample-01/exo-01.mp4",
-                    "assets/demo/sample-01/exo-02.mp4",
-                    "assets/demo/sample-01/exo-03.mp4",
-                    "assets/demo/sample-01/exo-04.mp4",
+                    "demo_videos/sample-01/exo-01.mp4",
+                    "demo_videos/sample-01/exo-02.mp4",
+                    "demo_videos/sample-01/exo-03.mp4",
+                    "demo_videos/sample-01/exo-04.mp4",
                 ],
             },
             "sample-02": {
                 label: "Sample 02",
-                input: "assets/demo/sample-02/input.mp4",
-                reconstruction: "assets/demo/sample-02/reconstruction.mp4",
-                gt: "assets/demo/sample-02/gt-motion.mp4",
+                input: "demo_videos/sample-02/input.mp4",
+                reconstruction: "demo_videos/sample-02/reconstruction.mp4",
+                gt: "demo_videos/sample-02/gt-motion.mp4",
                 exo: [
-                    "assets/demo/sample-02/exo-01.mp4",
-                    "assets/demo/sample-02/exo-02.mp4",
-                    "assets/demo/sample-02/exo-03.mp4",
-                    "assets/demo/sample-02/exo-04.mp4",
+                    "demo_videos/sample-02/exo-01.mp4",
+                    "demo_videos/sample-02/exo-02.mp4",
+                    "demo_videos/sample-02/exo-03.mp4",
+                    "demo_videos/sample-02/exo-04.mp4",
                 ],
             },
             "sample-03": {
                 label: "Sample 03",
-                input: "assets/demo/sample-03/input.mp4",
-                reconstruction: "assets/demo/sample-03/reconstruction.mp4",
-                gt: "assets/demo/sample-03/gt-motion.mp4",
+                input: "demo_videos/sample-03/input.mp4",
+                reconstruction: "demo_videos/sample-03/reconstruction.mp4",
+                gt: "demo_videos/sample-03/gt-motion.mp4",
                 exo: [
-                    "assets/demo/sample-03/exo-01.mp4",
-                    "assets/demo/sample-03/exo-02.mp4",
-                    "assets/demo/sample-03/exo-03.mp4",
-                    "assets/demo/sample-03/exo-04.mp4",
+                    "demo_videos/sample-03/exo-01.mp4",
+                    "demo_videos/sample-03/exo-02.mp4",
+                    "demo_videos/sample-03/exo-03.mp4",
+                    "demo_videos/sample-03/exo-04.mp4",
                 ],
             },
             "sample-04": {
                 label: "Sample 04",
-                input: "assets/demo/sample-04/input.mp4",
-                reconstruction: "assets/demo/sample-04/reconstruction.mp4",
-                gt: "assets/demo/sample-04/gt-motion.mp4",
+                input: "demo_videos/sample-04/input.mp4",
+                reconstruction: "demo_videos/sample-04/reconstruction.mp4",
+                gt: "demo_videos/sample-04/gt-motion.mp4",
                 exo: [
-                    "assets/demo/sample-04/exo-01.mp4",
-                    "assets/demo/sample-04/exo-02.mp4",
-                    "assets/demo/sample-04/exo-03.mp4",
-                    "assets/demo/sample-04/exo-04.mp4",
+                    "demo_videos/sample-04/exo-01.mp4",
+                    "demo_videos/sample-04/exo-02.mp4",
+                    "demo_videos/sample-04/exo-03.mp4",
+                    "demo_videos/sample-04/exo-04.mp4",
                 ],
             },
             "sample-05": {
                 label: "Sample 05",
-                input: "assets/demo/sample-05/input.mp4",
-                reconstruction: "assets/demo/sample-05/reconstruction.mp4",
-                gt: "assets/demo/sample-05/gt-motion.mp4",
+                input: "demo_videos/sample-05/input.mp4",
+                reconstruction: "demo_videos/sample-05/reconstruction.mp4",
+                gt: "demo_videos/sample-05/gt-motion.mp4",
                 exo: [
-                    "assets/demo/sample-05/exo-01.mp4",
-                    "assets/demo/sample-05/exo-02.mp4",
-                    "assets/demo/sample-05/exo-03.mp4",
-                    "assets/demo/sample-05/exo-04.mp4",
+                    "demo_videos/sample-05/exo-01.mp4",
+                    "demo_videos/sample-05/exo-02.mp4",
+                    "demo_videos/sample-05/exo-03.mp4",
+                    "demo_videos/sample-05/exo-04.mp4",
                 ],
             },
         };
