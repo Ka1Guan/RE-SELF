@@ -290,6 +290,7 @@
         }
 
         .demo-preview-frame {
+            display: block;
             overflow: hidden;
             border-top: 1px solid var(--line);
             border-radius: 0 0 5px 5px;
@@ -351,7 +352,7 @@
         .demo-results-grid {
             display: grid;
             grid-template-columns: minmax(0, 3fr) minmax(190px, 1fr);
-            align-items: end;
+            align-items: center;
             gap: 16px;
             width: 100%;
             margin-top: 0;
@@ -368,8 +369,16 @@
         }
 
         .demo-reconstruction-viewport video {
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
             transform-origin: center center;
             transition: transform 120ms ease;
+        }
+
+        .demo-reconstruction-viewport.is-dragging video {
+            cursor: grabbing;
+            transition: none;
         }
 
         .demo-zoom-controls {
@@ -922,8 +931,6 @@
                         <button class="demo-scene-card" type="button" data-scene="sample-04-dance" aria-pressed="false"><h3>Dance</h3><span class="demo-preview-frame"><video muted playsinline preload="metadata" src="assets/demo_videos/sample-04-dance/input.mp4"></video></span></button>
                         <button class="demo-scene-card" type="button" data-scene="sample-05-piano" aria-pressed="false"><h3>Piano</h3><span class="demo-preview-frame"><video muted playsinline preload="metadata" src="assets/demo_videos/sample-05-piano/input.mp4"></video></span></button>
                     </div>
-                    <video id="demo-input" hidden muted playsinline preload="metadata"></video>
-
                     <div class="demo-results-grid">
                         <figure class="demo-card demo-reconstruction">
                             <h3>RE-SELF reconstruction</h3>
@@ -1153,8 +1160,6 @@
             },
         };
 
-        const demoVideoIds = ["demo-input", "demo-reconstruction", "demo-gt", "demo-exo-01", "demo-exo-02", "demo-exo-03", "demo-exo-04"];
-        const demoVideos = demoVideoIds.map((id) => document.getElementById(id));
         const demoSceneButtons = [...document.querySelectorAll(".demo-scene-card")];
         const demoPreviewVideos = demoSceneButtons.map((button) => button.querySelector("video"));
         const demoPlayButton = document.getElementById("demo-play");
@@ -1162,11 +1167,20 @@
         const demoProgress = document.getElementById("demo-progress");
         const demoTime = document.getElementById("demo-time");
         const demoReconstruction = document.getElementById("demo-reconstruction");
+        const demoReconstructionViewport = demoReconstruction.parentElement;
+        const demoGt = document.getElementById("demo-gt");
+        const demoExoVideos = ["demo-exo-01", "demo-exo-02", "demo-exo-03", "demo-exo-04"].map((id) => document.getElementById(id));
+        const demoOutputVideos = [demoReconstruction, demoGt, ...demoExoVideos];
         const demoZoomOut = document.getElementById("demo-zoom-out");
         const demoZoomReset = document.getElementById("demo-zoom-reset");
         const demoZoomIn = document.getElementById("demo-zoom-in");
         const demoZoomValue = document.getElementById("demo-zoom-value");
+        let demoInput = demoPreviewVideos[0];
+        let demoVideos = [demoInput, ...demoOutputVideos];
         let demoZoom = 1;
+        let demoPanX = 0;
+        let demoPanY = 0;
+        let demoDrag = null;
         let demoSyncing = false;
 
         const formatDemoTime = (seconds) => {
@@ -1214,8 +1228,21 @@
             video.load();
         };
 
+        const clampDemoPan = () => {
+            const maxX = Math.max(0, (demoReconstructionViewport.clientWidth * (demoZoom - 1)) / 2);
+            const maxY = Math.max(0, (demoReconstructionViewport.clientHeight * (demoZoom - 1)) / 2);
+            demoPanX = Math.min(maxX, Math.max(-maxX, demoPanX));
+            demoPanY = Math.min(maxY, Math.max(-maxY, demoPanY));
+        };
+
+        const resetDemoPan = () => {
+            demoPanX = 0;
+            demoPanY = 0;
+        };
+
         const updateDemoZoom = () => {
-            demoReconstruction.style.transform = `scale(${demoZoom})`;
+            clampDemoPan();
+            demoReconstruction.style.transform = `translate3d(${demoPanX}px, ${demoPanY}px, 0) scale(${demoZoom})`;
             demoZoomValue.textContent = `${Math.round(demoZoom * 100)}%`;
         };
 
@@ -1227,15 +1254,25 @@
         const loadDemoScene = (sceneId) => {
             const scene = demoScenes[sceneId];
             if (!scene) return;
-            demoSceneButtons.forEach((button) => {
+            pauseAllDemoVideos();
+            let selectedIndex = 0;
+            demoSceneButtons.forEach((button, index) => {
                 const active = button.dataset.scene === sceneId;
                 button.setAttribute("aria-pressed", String(active));
+                if (active) selectedIndex = index;
             });
-            setDemoSource(demoVideos[0], scene.input);
-            setDemoSource(demoVideos[1], scene.reconstruction);
-            setDemoSource(demoVideos[2], scene.gt);
-            scene.exo.forEach((source, index) => setDemoSource(demoVideos[index + 3], source));
+            demoPreviewVideos.forEach((video) => {
+                video.pause();
+                video.currentTime = 0;
+            });
+            demoInput = demoPreviewVideos[selectedIndex];
+            demoVideos = [demoInput, ...demoOutputVideos];
+            setDemoSource(demoReconstruction, scene.reconstruction);
+            setDemoSource(demoGt, scene.gt);
+            scene.exo.forEach((source, index) => setDemoSource(demoExoVideos[index], source));
             demoVideos.forEach((video) => { video.currentTime = 0; });
+            resetDemoPan();
+            updateDemoZoom();
             demoPlayButton.textContent = "Play all";
             updateDemoControls(0);
         };
@@ -1251,33 +1288,27 @@
             demoPlayButton.textContent = "Play all";
         };
 
-        demoVideos.forEach((video) => {
+        [...demoPreviewVideos, ...demoOutputVideos].forEach((video) => {
             video.addEventListener("loadedmetadata", () => {
                 updateDemoFrameAspect(video);
-                updateDemoControls(video.currentTime);
+                if (demoVideos.includes(video)) updateDemoControls(demoInput.currentTime);
             });
             video.addEventListener("timeupdate", () => {
-                if (video === demoVideos[0]) syncDemoTime(video.currentTime);
+                if (video === demoInput) syncDemoTime(video.currentTime);
             });
             video.addEventListener("play", () => {
-                if (video === demoVideos[0]) playAllDemoVideos();
+                if (video === demoInput) playAllDemoVideos();
             });
             video.addEventListener("pause", () => {
-                if (video === demoVideos[0] && !demoSyncing) pauseAllDemoVideos();
+                if (video === demoInput && !demoSyncing) pauseAllDemoVideos();
             });
         });
 
         demoSceneButtons.forEach((button) => {
             button.addEventListener("click", () => loadDemoScene(button.dataset.scene));
         });
-        demoPreviewVideos.forEach((video) => {
-            video.muted = true;
-            video.loop = true;
-            video.autoplay = true;
-            video.play().catch(() => null);
-        });
         demoPlayButton.addEventListener("click", () => {
-            if (demoVideos[0].paused) playAllDemoVideos();
+            if (demoInput.paused) playAllDemoVideos();
             else pauseAllDemoVideos();
         });
         demoResetButton.addEventListener("click", () => {
@@ -1287,12 +1318,36 @@
         });
         demoProgress.addEventListener("input", () => syncDemoTime(Number(demoProgress.value)));
         demoZoomOut.addEventListener("click", () => changeDemoZoom(-0.1));
-        demoZoomReset.addEventListener("click", () => { demoZoom = 1; updateDemoZoom(); });
+        demoZoomReset.addEventListener("click", () => { demoZoom = 1; resetDemoPan(); updateDemoZoom(); });
         demoZoomIn.addEventListener("click", () => changeDemoZoom(0.1));
-        demoReconstruction.parentElement.addEventListener("wheel", (event) => {
+        demoReconstructionViewport.addEventListener("wheel", (event) => {
             event.preventDefault();
             changeDemoZoom(event.deltaY < 0 ? 0.1 : -0.1);
         }, { passive: false });
+        demoReconstructionViewport.addEventListener("pointerdown", (event) => {
+            if (demoZoom <= 1) return;
+            event.preventDefault();
+            demoDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, panX: demoPanX, panY: demoPanY };
+            demoReconstructionViewport.classList.add("is-dragging");
+            demoReconstructionViewport.setPointerCapture(event.pointerId);
+        });
+        demoReconstructionViewport.addEventListener("pointermove", (event) => {
+            if (!demoDrag || event.pointerId !== demoDrag.pointerId) return;
+            demoPanX = demoDrag.panX + event.clientX - demoDrag.startX;
+            demoPanY = demoDrag.panY + event.clientY - demoDrag.startY;
+            updateDemoZoom();
+        });
+        const endDemoDrag = (event) => {
+            if (!demoDrag || event.pointerId !== demoDrag.pointerId) return;
+            demoDrag = null;
+            demoReconstructionViewport.classList.remove("is-dragging");
+            if (demoReconstructionViewport.hasPointerCapture(event.pointerId)) {
+                demoReconstructionViewport.releasePointerCapture(event.pointerId);
+            }
+        };
+        demoReconstructionViewport.addEventListener("pointerup", endDemoDrag);
+        demoReconstructionViewport.addEventListener("pointercancel", endDemoDrag);
+        window.addEventListener("resize", updateDemoZoom);
         updateDemoZoom();
         loadDemoScene(demoSceneButtons[0].dataset.scene);
 
