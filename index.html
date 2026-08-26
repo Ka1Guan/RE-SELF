@@ -1624,16 +1624,41 @@
             }
 
             copyViewFrom(source) {
-                if (!source) return;
-                this.camera.position.copy(source.camera.position);
-                this.camera.quaternion.copy(source.camera.quaternion);
-                this.camera.up.copy(source.camera.up);
+                if (!source || !source.bounds || !this.bounds) return;
+                const makeBasis = (viewer) => {
+                    const up = new THREE.Vector3().fromArray(viewer.displayUp).normalize();
+                    const horizontal = new THREE.Vector3(1.0, -1.0, 0.25);
+                    horizontal.addScaledVector(up, -horizontal.dot(up));
+                    if (horizontal.lengthSq() < 1e-6) {
+                        horizontal.crossVectors(up, new THREE.Vector3(0, 1, 0));
+                    }
+                    horizontal.normalize();
+                    const side = new THREE.Vector3().crossVectors(up, horizontal).normalize();
+                    return { horizontal, side, up };
+                };
+                const sourceBasis = makeBasis(source);
+                const targetBasis = makeBasis(this);
+                const sourceRadius = Math.max(source.bounds.radius, 0.5);
+                const targetRadius = Math.max(this.bounds.radius, 0.5);
+                const scale = targetRadius / sourceRadius;
+                const mapVector = (vector) => new THREE.Vector3()
+                    .addScaledVector(targetBasis.horizontal, vector.dot(sourceBasis.horizontal) * scale)
+                    .addScaledVector(targetBasis.side, vector.dot(sourceBasis.side) * scale)
+                    .addScaledVector(targetBasis.up, vector.dot(sourceBasis.up) * scale);
+
+                const sourceCenter = new THREE.Vector3().fromArray(source.bounds.center);
+                const targetCenter = new THREE.Vector3().fromArray(this.bounds.center);
+                const targetOffset = source.controls.target.clone().sub(sourceCenter);
+                const cameraOffset = source.camera.position.clone().sub(source.controls.target);
+
+                this.controls.target.copy(targetCenter).add(mapVector(targetOffset));
+                this.camera.position.copy(this.controls.target).add(mapVector(cameraOffset));
+                this.camera.up.copy(targetBasis.up);
                 this.camera.zoom = source.camera.zoom;
-                this.camera.near = source.camera.near;
-                this.camera.far = source.camera.far;
-                this.controls.target.copy(source.controls.target);
-                this.controls.minDistance = source.controls.minDistance;
-                this.controls.maxDistance = source.controls.maxDistance;
+                this.camera.near = Math.max(targetRadius / 1000, 0.002);
+                this.camera.far = Math.max(targetRadius * 30, 100);
+                this.controls.minDistance = targetRadius * 0.08;
+                this.controls.maxDistance = targetRadius * 12;
                 this.camera.updateProjectionMatrix();
                 this.controls.update();
             }
