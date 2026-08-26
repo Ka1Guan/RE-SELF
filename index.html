@@ -385,6 +385,7 @@
         .demo-viewer-status {
             position: absolute;
             inset: auto 9px 9px 9px;
+            overflow: hidden;
             padding: 5px 8px;
             border-radius: 4px;
             color: #fff;
@@ -392,6 +393,22 @@
             font-size: 11px;
             line-height: 1.35;
             pointer-events: none;
+        }
+
+        .demo-viewer-status::after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(
+                90deg,
+                var(--accent) 0%,
+                var(--accent) var(--load-progress, 0%),
+                rgba(255, 255, 255, 0.22) var(--load-progress, 0%),
+                rgba(255, 255, 255, 0.22) 100%
+            );
+            content: "";
         }
 
         .demo-viewer-status[hidden] { display: none; }
@@ -948,7 +965,7 @@
                             <div class="demo-viewer-frame">
                                 <div class="demo-viewer-mount" id="demo-pred-viewer" aria-label="Interactive RE-SELF reconstruction"></div>
                                 <button class="demo-view-reset" id="demo-pred-view-reset" type="button" title="Reset prediction view" aria-label="Reset prediction view">&#8634;</button>
-                                <span class="demo-viewer-status" id="demo-pred-status">Loading 3D reconstruction...</span>
+                                <span class="demo-viewer-status" id="demo-pred-status">Loading prediction: 0%</span>
                             </div>
                         </figure>
                         <figure class="demo-card demo-gt">
@@ -956,7 +973,7 @@
                             <div class="demo-viewer-frame">
                                 <div class="demo-viewer-mount" id="demo-gt-viewer" aria-label="Interactive ground-truth reconstruction"></div>
                                 <button class="demo-view-reset" id="demo-gt-view-reset" type="button" title="Reset ground-truth view" aria-label="Reset ground-truth view">&#8634;</button>
-                                <span class="demo-viewer-status" id="demo-gt-status">Loading 3D reconstruction...</span>
+                                <span class="demo-viewer-status" id="demo-gt-status">Loading ground truth: 0%</span>
                             </div>
                         </figure>
                     </div>
@@ -1108,9 +1125,23 @@
             }
         }
     </script>
+    <script>
+        window.__reself3dStarted = false;
+        window.setTimeout(() => {
+            if (window.__reself3dStarted) return;
+            ["demo-pred-status", "demo-gt-status"].forEach((id) => {
+                const status = document.getElementById(id);
+                if (!status) return;
+                status.textContent = "3D viewer failed to start. Check the viewer files and refresh.";
+                status.style.setProperty("--load-progress", "0%");
+            });
+        }, 10000);
+    </script>
     <script type="module">
         import * as THREE from "three";
         import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+        window.__reself3dStarted = true;
 
         const projectImages = document.querySelectorAll(".media-frame img");
         projectImages.forEach((image) => {
@@ -1131,10 +1162,65 @@
             exo: [1, 2, 3, 4].map((index) => `assets/demo_videos/${id}/exo-0${index}.mp4`),
         }]));
 
-        const fetchBuffer = async (url) => {
-            const response = await fetch(url, { cache: "force-cache" });
-            if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
-            return response.arrayBuffer();
+        const fetchBuffersWithProgress = async (assets, onProgress) => {
+            const responses = await Promise.all(assets.map(async ({ key, url }) => {
+                const response = await fetch(url, { cache: "force-cache" });
+                if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
+                return {
+                    key,
+                    url,
+                    response,
+                    total: Number(response.headers.get("content-length")) || 0,
+                };
+            }));
+            const totalBytes = responses.reduce((sum, item) => sum + item.total, 0);
+            let loadedBytes = 0;
+            let completedAssets = 0;
+            let lastPercent = -1;
+            const report = () => {
+                const fraction = totalBytes > 0
+                    ? loadedBytes / totalBytes
+                    : completedAssets / Math.max(responses.length, 1);
+                const percent = Math.max(0, Math.min(100, Math.round(fraction * 100)));
+                if (percent !== lastPercent) {
+                    lastPercent = percent;
+                    onProgress(percent);
+                }
+            };
+            report();
+
+            const buffers = await Promise.all(responses.map(async ({ key, response }) => {
+                if (!response.body) {
+                    const buffer = await response.arrayBuffer();
+                    loadedBytes += buffer.byteLength;
+                    completedAssets += 1;
+                    report();
+                    return [key, buffer];
+                }
+
+                const reader = response.body.getReader();
+                const chunks = [];
+                let byteLength = 0;
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    byteLength += value.byteLength;
+                    loadedBytes += value.byteLength;
+                    report();
+                }
+                completedAssets += 1;
+                report();
+                const merged = new Uint8Array(byteLength);
+                let offset = 0;
+                chunks.forEach((chunk) => {
+                    merged.set(chunk, offset);
+                    offset += chunk.byteLength;
+                });
+                return [key, merged.buffer];
+            }));
+            onProgress(100);
+            return new Map(buffers);
         };
 
         const fetchJson = async (url) => {
@@ -1205,8 +1291,9 @@
                 }
             }
 
-            setStatus(message) {
+            setStatus(message, progress = null) {
                 this.status.textContent = message;
+                if (progress !== null) this.status.style.setProperty("--load-progress", `${progress}%`);
                 this.status.hidden = !message;
             }
 
@@ -1394,38 +1481,53 @@
             async load(base, manifest, video) {
                 const generation = ++this.generation;
                 this.clear();
-                this.setStatus("Loading full current-frame point clouds...");
                 this.numFrames = manifest.numFrames;
                 const spec = this.mode === "prediction" ? manifest.prediction : manifest.groundTruth;
+                const label = this.mode === "prediction" ? "prediction" : "ground truth";
+                this.setStatus(`Loading ${label}: 0%`, 0);
                 this.bounds = spec.bounds;
                 this.displayUp = spec.displayUp || [0, 0, 1];
                 this.videoTexture = this.createVideoTexture(video);
 
                 try {
                     if (this.mode === "prediction") {
-                        const [raysBuffer, depthBuffers, verticesBuffer, facesBuffer, cameraBuffer] = await Promise.all([
-                            fetchBuffer(base + spec.pointCloud.rays),
-                            Promise.all(spec.pointCloud.chunks.map((chunk) => fetchBuffer(base + chunk.file))),
-                            fetchBuffer(base + spec.mesh.vertices),
-                            fetchBuffer(base + spec.mesh.faces),
-                            fetchBuffer(base + spec.camera.file),
-                        ]);
+                        const depthAssets = spec.pointCloud.chunks.map((chunk, index) => ({
+                            key: `depth-${index}`,
+                            url: base + chunk.file,
+                        }));
+                        const buffers = await fetchBuffersWithProgress([
+                            { key: "rays", url: base + spec.pointCloud.rays },
+                            ...depthAssets,
+                            { key: "vertices", url: base + spec.mesh.vertices },
+                            { key: "faces", url: base + spec.mesh.faces },
+                            { key: "camera", url: base + spec.camera.file },
+                        ], (percent) => {
+                            if (generation === this.generation) this.setStatus(`Loading ${label}: ${percent}%`, percent);
+                        });
                         if (generation !== this.generation) return;
-                        this.createPredictionPoints(spec.pointCloud, raysBuffer, depthBuffers);
-                        this.createMesh(spec.mesh, verticesBuffer, facesBuffer);
-                        this.createCameraFrustum(new Float32Array(cameraBuffer), spec.bounds, 0x5aa7ff);
+                        this.setStatus("Preparing prediction...", 100);
+                        this.createPredictionPoints(
+                            spec.pointCloud,
+                            buffers.get("rays"),
+                            depthAssets.map(({ key }) => buffers.get(key)),
+                        );
+                        this.createMesh(spec.mesh, buffers.get("vertices"), buffers.get("faces"));
+                        this.createCameraFrustum(new Float32Array(buffers.get("camera")), spec.bounds, 0x5aa7ff);
                     } else {
-                        const [pointsBuffer, uvBuffer, verticesBuffer, facesBuffer, cameraBuffer] = await Promise.all([
-                            fetchBuffer(base + spec.pointCloud.points),
-                            fetchBuffer(base + spec.pointCloud.uv),
-                            fetchBuffer(base + spec.mesh.vertices),
-                            fetchBuffer(base + spec.mesh.faces),
-                            fetchBuffer(base + spec.camera.file),
-                        ]);
+                        const buffers = await fetchBuffersWithProgress([
+                            { key: "points", url: base + spec.pointCloud.points },
+                            { key: "uv", url: base + spec.pointCloud.uv },
+                            { key: "vertices", url: base + spec.mesh.vertices },
+                            { key: "faces", url: base + spec.mesh.faces },
+                            { key: "camera", url: base + spec.camera.file },
+                        ], (percent) => {
+                            if (generation === this.generation) this.setStatus(`Loading ${label}: ${percent}%`, percent);
+                        });
                         if (generation !== this.generation) return;
-                        this.createGroundTruthPoints(spec.pointCloud, pointsBuffer, uvBuffer);
-                        this.createMesh(spec.mesh, verticesBuffer, facesBuffer);
-                        this.createCameraFrustum(new Float32Array(cameraBuffer), spec.bounds, 0x79d39a);
+                        this.setStatus("Preparing ground truth...", 100);
+                        this.createGroundTruthPoints(spec.pointCloud, buffers.get("points"), buffers.get("uv"));
+                        this.createMesh(spec.mesh, buffers.get("vertices"), buffers.get("faces"));
+                        this.createCameraFrustum(new Float32Array(buffers.get("camera")), spec.bounds, 0x79d39a);
                     }
                     this.ready = true;
                     this.resetView();
