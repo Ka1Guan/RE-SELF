@@ -884,20 +884,20 @@
             <p class="tagline"><strong>RESELF</strong>: <strong>RE</strong>constructing the <strong>S</strong>cene and the s<strong>ELF</strong>.</p>
 
             <div class="authors">
-                <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2,†</sup>,
-                <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2,†</sup>,
+                <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2,*</sup>,
+                <a href="[AUTHOR_LINK_2]">Minchao Jiang</a><sup>2,*</sup>,
                 <a href="[AUTHOR_LINK_3]">Ruichen WangLi</a><sup>2</sup>,
-                <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,*</sup>,
-                <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,*</sup>
+                <a href="[AUTHOR_LINK_4]">Wentao Zhu</a><sup>2,†</sup>,
+                <a href="[AUTHOR_LINK_5]">Lei Zhang</a><sup>1,†</sup>
             </div>
             <p class="affiliations">
                 <sup>1</sup>The Hong Kong Polytechnic University
                 &nbsp;&nbsp;
                 <sup>2</sup>Eastern Institute of Technology, Ningbo
                 &nbsp;&nbsp;
-                <sup>†</sup>Equal contribution
+                <sup>*</sup>Equal contribution
                 &nbsp;&nbsp;
-                <sup>*</sup>Corresponding authors
+                <sup>†</sup>Corresponding authors
             </p>
             <div class="resource-row" aria-label="Project resources">
                 <a class="resource-link" href="https://ka1guan.github.io/RESELF/#overview">arXiv</a>
@@ -923,7 +923,6 @@
         <section id="method">
             <div class="container">
                 <h2 class="section-heading">Method</h2>
-                <p class="section-lead">RESELF transfers large-scale geometry priors to egocentric video, then uses the recovered world to reconstruct the unseen wearer.</p>
 
                 <figure class="method-figure">
                     <div class="media-frame method-frame" data-placeholder="Add the RESELF method overview">
@@ -1053,7 +1052,7 @@
         <section class="band" id="abstract">
             <div class="container">
                 <h2 class="section-heading">Abstract</h2>
-                <p class="abstract-copy">Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RESELF, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RESELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RESELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
+                <p class="abstract-copy">Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RESELF (<u>RE</u>constructing the <u>S</u>cene and the s<u>ELF</u>), a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RESELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RESELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
             </div>
         </section>
 
