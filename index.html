@@ -39,7 +39,7 @@
             color: var(--ink);
             background: #fff;
             font-family: "Inter", Arial, sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.5;
             letter-spacing: 0;
             -webkit-font-smoothing: antialiased;
@@ -103,7 +103,7 @@
         }
 
         .hero {
-            padding: 36px 0 22px;
+            padding: 32px 0 20px;
             text-align: center;
         }
 
@@ -117,18 +117,18 @@
 
         h1 {
             max-width: 900px;
-            margin: 0 auto 12px;
-            font-size: 36px;
+            margin: 0 auto 10px;
+            font-size: 34px;
             line-height: 1.16;
             letter-spacing: 0;
         }
 
         .tagline {
-            max-width: 800px;
-            margin: 0 auto 16px;
+            max-width: 720px;
+            margin: 0 auto 14px;
             color: var(--body);
-            font-size: 16px;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.45;
         }
 
         .tagline strong { color: var(--accent); }
@@ -190,7 +190,7 @@
         }
 
         main section {
-            padding: 32px 0;
+            padding: 28px 0;
             scroll-margin-top: 50px;
         }
 
@@ -205,9 +205,7 @@
         #method { order: 3; }
         #results { order: 4; }
         #demo { order: 5; }
-        #dataset { order: 6; }
-        #ablation { order: 7; }
-        #citation { order: 8; }
+        #citation { order: 6; }
 
         .band {
             border-top: 1px solid var(--line);
@@ -216,15 +214,15 @@
         }
 
         .section-heading {
-            margin: 0 0 8px;
-            font-size: 24px;
+            margin: 0 0 6px;
+            font-size: 22px;
             line-height: 1.25;
             text-align: center;
         }
 
         .section-lead {
-            max-width: 720px;
-            margin: 0 auto 20px;
+            max-width: 660px;
+            margin: 0 auto 16px;
             color: var(--body);
             text-align: center;
         }
@@ -490,22 +488,24 @@
 
         .caption {
             max-width: 920px;
-            margin: 9px auto 0;
+            margin: 7px auto 0;
             color: var(--muted);
-            font-size: 13px;
-            line-height: 1.55;
+            font-size: 12px;
+            line-height: 1.45;
         }
 
         .teaser-section { padding-top: 12px; }
 
-        .core-statement {
-            max-width: 780px;
-            margin: 14px auto 0;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.55;
+        .teaser-tldr {
+            max-width: 760px;
+            margin: 0 auto 14px;
+            color: var(--body);
+            font-size: 15px;
+            line-height: 1.45;
             text-align: center;
         }
+
+        .teaser-tldr strong { color: var(--accent); }
 
         .problem-grid,
         .stage-grid,
@@ -547,7 +547,31 @@
             font-size: 14px;
         }
 
-        .method-figure { margin: 0 0 27px; }
+        .method-figure { margin: 0 0 16px; }
+
+        .method-steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .method-steps span {
+            padding: 6px 10px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--body);
+            background: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .abstract-copy {
+            width: min(720px, 100%);
+            margin: 0 auto;
+            color: var(--body);
+            line-height: 1.65;
+        }
 
         .stage-number {
             display: grid;
@@ -606,15 +630,9 @@
         }
 
         .benchmark-panel h3 {
-            margin: 12px 14px 1px;
-            font-size: 16px;
+            margin: 11px 14px 9px;
+            font-size: 15px;
             line-height: 1.3;
-        }
-
-        .benchmark-panel > p {
-            margin: 0 14px 9px;
-            color: var(--muted);
-            font-size: 11px;
         }
 
         .metric-table {
@@ -669,15 +687,15 @@
 
         .metric-table .metric-value { display: block; }
 
-        .comparison-legend { margin: 28px 0 12px; }
+        .comparison-legend { margin: 22px 0 10px; }
         .comparison-legend + .qualitative-grid { margin-top: 0; }
 
         .qualitative-grid {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             width: min(760px, 100%);
-            gap: 24px;
-            margin-top: 30px;
+            gap: 18px;
+            margin-top: 22px;
             margin-right: auto;
             margin-left: auto;
         }
@@ -803,11 +821,12 @@
             .nav-links { gap: 12px; font-size: 12px; }
             .nav-links a { min-height: 42px; }
             .hero { padding-top: 30px; }
-            h1 { font-size: 30px; }
-            .tagline { font-size: 16px; }
-            main section { padding: 34px 0; }
-            .section-heading { font-size: 24px; }
+            h1 { font-size: 29px; }
+            .tagline { font-size: 14px; }
+            main section { padding: 28px 0; }
+            .section-heading { font-size: 21px; }
             .teaser-section { padding-top: 8px; }
+            .teaser-tldr { font-size: 14px; }
 
             .media-frame.teaser-frame,
             .media-frame.method-frame { aspect-ratio: 4 / 3; }
@@ -850,7 +869,7 @@
     <header class="hero" id="top">
         <div class="container">
             <h1>Seeing the World and the Self from Egocentric Video</h1>
-            <p class="tagline"><strong>RE-SELF</strong> jointly reconstructs metric 3D scene geometry, camera motion, and the unseen wearer's full-body motion from a monocular egocentric video.</p>
+            <p class="tagline"><strong>RE-SELF</strong> reconstructs the metric world, camera, and unseen wearer from a single egocentric video.</p>
 
             <div class="authors">
                 <a href="[AUTHOR_LINK_1]">Kai Guan</a><sup>1,2,†</sup>,
@@ -871,85 +890,48 @@
             <div class="resource-row" aria-label="Project resources">
                 <a class="resource-link" href="https://ka1guan.github.io/RE-SELF/#overview">arXiv</a>
                 <a class="resource-link" href="https://github.com/Ka1Guan/RE-SELF">Code</a>
-                <a class="resource-link" href="#demo">Video</a>
-                <a class="resource-link" href="https://ka1guan.github.io/RE-SELF/#dataset">Dataset</a>
+                <a class="resource-link" href="#demo">Demo</a>
             </div>
         </div>
     </header>
 
     <main>
-        <section class="teaser-section" aria-labelledby="teaser-caption">
+        <section class="teaser-section" id="overview" aria-labelledby="teaser-caption">
             <div class="container">
+                <p class="teaser-tldr"><strong>TL;DR.</strong> Joint metric reconstruction of scene geometry, camera motion, and full-body motion from monocular egocentric video.</p>
                 <figure style="margin: 0;">
                     <div class="media-frame teaser-frame" data-placeholder="Add the RE-SELF teaser figure">
                         <img src="assets/fig_teaser.png" alt="RE-SELF contrasts self-blind scene reconstruction, world-blind motion reconstruction, and joint scene-and-self reconstruction." loading="eager">
                     </div>
-                    <figcaption class="caption" id="teaser-caption">Scene-only reconstruction is <strong>self-blind</strong>; motion-only reconstruction is <strong>world-blind</strong>. RE-SELF recovers the surrounding scene, camera trajectory, and full-body motion together in one shared metric frame.</figcaption>
+                    <figcaption class="caption" id="teaser-caption">RE-SELF unifies the visible world and the unseen self in a shared metric frame.</figcaption>
                 </figure>
-                <p class="core-statement">The visible world favors deterministic geometry, while the invisible body requires generative motion inference. RE-SELF connects both through metric camera geometry and closed-loop kinematic feedback.</p>
-            </div>
-        </section>
-
-        <section class="band" id="overview">
-            <div class="container">
-                <h2 class="section-heading">TL;DR</h2>
-                <p class="section-lead">RE-SELF jointly reconstructs the world and the unseen self from a single egocentric video.</p>
-                <div class="problem-grid">
-                    <article class="problem-item">
-                        <span class="eyebrow">Scene reconstruction</span>
-                        <h3>Self-blind</h3>
-                        <p>Recovers scene geometry and camera motion, but treats the wearer as absent or dynamic noise.</p>
-                    </article>
-                    <article class="problem-item">
-                        <span class="eyebrow">Motion reconstruction</span>
-                        <h3>World-blind</h3>
-                        <p>Infers plausible full-body motion, but lacks explicit metric scene context and often relies on external trajectories.</p>
-                    </article>
-                    <article class="problem-item">
-                        <span class="eyebrow">RE-SELF</span>
-                        <h3>Joint world and self</h3>
-                        <p>Couples scene, camera, and SMPL-X motion in a common metric coordinate frame so that each task can support the other.</p>
-                    </article>
-                </div>
             </div>
         </section>
 
         <section id="method">
             <div class="container">
-                <h2 class="section-heading">A geometry-conditioned, closed-loop framework</h2>
-                <p class="section-lead">RE-SELF transfers large-scale exocentric geometry priors to egocentric video, then uses the recovered world to generate the unseen wearer.</p>
+                <h2 class="section-heading">Method</h2>
+                <p class="section-lead">Metric geometry conditions motion generation; kinematic feedback improves camera tracking.</p>
 
                 <figure class="method-figure">
                     <div class="media-frame method-frame" data-placeholder="Add the RE-SELF method overview">
                         <img src="assets/fig_inference.png" alt="Overview of the RE-SELF geometry backbone, motion head, and closed-loop feedback." loading="lazy">
                     </div>
-                    <figcaption class="caption">The geometry backbone predicts metric pointmaps and camera poses. Camera trajectories and attention-pooled register tokens condition a diffusion motion head; motion supervision subsequently refines the camera head.</figcaption>
+                    <figcaption class="caption">A geometry backbone, conditional motion head, and closed-loop camera refinement.</figcaption>
                 </figure>
 
-                <div class="stage-grid">
-                    <article class="stage">
-                        <span class="stage-number">1</span>
-                        <h3>Egocentric geometry adaptation</h3>
-                        <p>Frame-wise metric-scale and relative-egomotion objectives adapt Pi3X to rapid head motion and dynamic ego video.</p>
-                    </article>
-                    <article class="stage">
-                        <span class="stage-number">2</span>
-                        <h3>Geometry-conditioned motion</h3>
-                        <p>The camera trajectory anchors global motion, while scene-aware register tokens guide conditional motion diffusion.</p>
-                    </article>
-                    <article class="stage">
-                        <span class="stage-number">3</span>
-                        <h3>Kinematic feedback</h3>
-                        <p>A frozen motion prior sends gradients through the differentiable trajectory condition to improve camera tracking.</p>
-                    </article>
+                <div class="method-steps" aria-label="RE-SELF method stages">
+                    <span>1 · Metric geometry</span>
+                    <span>2 · Conditioned motion</span>
+                    <span>3 · Kinematic feedback</span>
                 </div>
             </div>
         </section>
 
-        <section class="band" id="demo">
+        <section id="demo">
             <div class="container">
-                <h2 class="section-heading">Joint reconstruction in action</h2>
-                <p class="section-lead">Choose an egocentric input to inspect synchronized predicted and ground-truth reconstruction from any viewpoint.</p>
+                <h2 class="section-heading">Interactive demo</h2>
+                <p class="section-lead">Select an input and inspect synchronized prediction and ground truth.</p>
 
                 <div class="demo-stage" aria-live="polite">
                     <div class="demo-scene-strip" aria-label="Choose an egocentric input">
@@ -994,39 +976,32 @@
                         <input class="demo-progress" id="demo-progress" type="range" min="0" max="1" step="0.01" value="0" aria-label="Demo video timeline">
                         <span class="demo-time" id="demo-time">0:00 / 0:00</span>
                     </div>
-                    <p class="demo-note">All seven views share one timeline. The predicted and ground-truth 3D views also stay linked while rotating, zooming, or panning.</p>
                 </div>
             </div>
         </section>
 
-        <section id="results">
+        <section class="band" id="results">
             <div class="container">
-                <h2 class="section-heading">State-of-the-art world and self reconstruction</h2>
-                <p class="section-lead">RE-SELF improves camera tracking, metric scene depth, body motion, and hand motion under a controlled EE4D-JSM protocol.</p>
+                <h2 class="section-heading">Results</h2>
+                <p class="section-lead">State-of-the-art metric geometry and full-body motion reconstruction.</p>
 
                 <div class="benchmark-panels" aria-label="Key EE4D-JSM reconstruction results">
                     <section class="benchmark-panel">
                         <h3>Metric geometry</h3>
-                        <p>Absolute metric scale reconstruction</p>
                         <table class="metric-table">
                             <thead><tr><th scope="col">Metric</th><th scope="col">RE-SELF</th><th scope="col">Second best</th></tr></thead>
                             <tbody>
                                 <tr><th scope="row">ATE ↓</th><td>0.022</td><td class="runner-up"><span class="method-name">Pi3X</span>0.026</td></tr>
-                                <tr><th scope="row">RPE Trans. ↓</th><td>0.010</td><td class="runner-up"><span class="method-name">Pi3X</span>0.019</td></tr>
                                 <tr><th scope="row">RPE Rot. ↓</th><td>0.341</td><td class="runner-up"><span class="method-name">Pi3X</span>0.557</td></tr>
                                 <tr><th scope="row">Abs-Rel ↓</th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
-                                <tr><th scope="row">δ1 ↑</th><td>0.873</td><td class="runner-up"><span class="method-name">Pi3X</span>0.863</td></tr>
                             </tbody>
                         </table>
                     </section>
                     <section class="benchmark-panel">
                         <h3>Full-body motion</h3>
-                        <p>Egocentric motion reconstruction</p>
                         <table class="metric-table">
                             <thead><tr><th scope="col">Metric</th><th scope="col">RE-SELF</th><th scope="col">Second best</th></tr></thead>
                             <tbody>
-                                <tr><th scope="row">Head Rot. Error ↓</th><td>0.268</td><td class="runner-up"><span class="method-name">UEM</span>0.280</td></tr>
-                                <tr><th scope="row">Head Trans. error ↓</th><td>0.050</td><td class="runner-up"><span class="method-name">UEM</span>0.066</td></tr>
                                 <tr><th scope="row">MPJPE ↓</th><td>0.110</td><td class="runner-up"><span class="method-name">UEM</span>0.116</td></tr>
                                 <tr><th scope="row">PA-MPJPE ↓</th><td>0.075</td><td class="runner-up"><span class="method-name">UEM</span>0.080</td></tr>
                                 <tr><th scope="row">Hand-MPJPE ↓</th><td>0.175</td><td class="runner-up"><span class="method-name">UEM</span>0.184</td></tr>
@@ -1044,40 +1019,12 @@
                 <div class="qualitative-grid">
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a local articulation comparison"><img src="assets/fig_motion1.png" alt="Qualitative comparison of UniEgoMotion and RE-SELF body articulation." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Local articulation.</strong> Geometry context improves body and hand pose under severe self-occlusion.</figcaption>
+                        <figcaption class="caption"><strong>Local articulation.</strong> More accurate body and hand pose.</figcaption>
                     </figure>
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a global trajectory comparison"><img src="assets/fig_motion2.png" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Global alignment.</strong> Metric camera conditioning reduces root drift and better aligns motion with the scene.</figcaption>
+                        <figcaption class="caption"><strong>Global alignment.</strong> Less root drift in the scene.</figcaption>
                     </figure>
-                </div>
-            </div>
-        </section>
-
-        <section class="band" id="dataset">
-            <div class="container dataset-layout">
-                <div class="dataset-copy">
-                    <span class="eyebrow">EE4D-JSM</span>
-                    <h2 class="section-heading">Aligned supervision for the world and the self</h2>
-                    <p class="section-lead">Built from EgoExo4D and EE4D-Motion, EE4D-JSM aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion under one training and evaluation protocol.</p>
-                </div>
-                <div class="dataset-stats" aria-label="EE4D-JSM statistics">
-                    <div class="dataset-stat"><strong>16,807</strong><span>training sequences</span></div>
-                    <div class="dataset-stat"><strong>5,212</strong><span>testing sequences</span></div>
-                    <div class="dataset-stat"><strong>18</strong><span>activity categories</span></div>
-                    <div class="dataset-stat"><strong>70+</strong><span>diverse scenes</span></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="ablation">
-            <div class="container">
-                <h2 class="section-heading">What makes the loop work?</h2>
-                <p class="section-lead">Controlled ablations isolate the contribution of each stage.</p>
-                <div class="ablation-grid">
-                    <article class="ablation-item"><span class="eyebrow">Ego adaptation</span><h3>Stable metric geometry</h3><p>Frame-wise scale supervision reduces scale variation, while relative-egomotion supervision improves short-term camera consistency.</p></article>
-                    <article class="ablation-item"><span class="eyebrow">Scene to self</span><h3>Geometry beats appearance alone</h3><p>RE-SELF-s1 geometry features improve motion and hand reconstruction beyond trajectory-only and generic DINOv2 conditions.</p></article>
-                    <article class="ablation-item"><span class="eyebrow">Self to scene</span><h3>Feedback, not extra training</h3><p>Kinematic feedback reaches 0.0217 ATE, while an equally trained camera-only control remains at 0.0233.</p></article>
                 </div>
             </div>
         </section>
@@ -1085,18 +1032,13 @@
         <section class="band" id="abstract">
             <div class="container">
                 <h2 class="section-heading">Abstract</h2>
-                <p class="section-lead">The complete paper summary is available here without interrupting the visual narrative above.</p>
-                <details>
-                    <summary>Read the abstract</summary>
-                    <p>Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RE-SELF, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RE-SELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RE-SELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
-                </details>
+                <p class="abstract-copy">RE-SELF jointly reconstructs metric scene geometry, camera motion, and the unseen wearer's full-body motion from monocular egocentric video. A geometry foundation model is adapted with metric-scale and relative-pose objectives, while its camera trajectory and geometric features condition motion generation. Closed-loop kinematic feedback further improves camera tracking. We also introduce EE4D-JSM for aligned scene, camera, and SMPL-X supervision.</p>
             </div>
         </section>
 
-        <section id="citation">
+        <section class="band" id="citation">
             <div class="container">
-                <h2 class="section-heading">Citation</h2>
-                <p class="section-lead">Please cite the paper if RE-SELF or EE4D-JSM is useful for your research.</p>
+                <h2 class="section-heading">BibTeX</h2>
                 <div class="citation-wrap">
                     <pre class="bibtex" id="bibtex">@inproceedings{guan2026reself,
   title     = {Seeing the World and the Self from Egocentric Video},
@@ -1112,8 +1054,7 @@
 
     <footer>
         <div class="container">
-            <p>RE-SELF: Seeing the World and the Self from Egocentric Video</p>
-            <p>Code, models, and EE4D-JSM will be released according to the publication schedule.</p>
+            <p>RE-SELF · Seeing the World and the Self from Egocentric Video</p>
         </div>
     </footer>
 
