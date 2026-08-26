@@ -550,20 +550,31 @@
         .method-figure { margin: 0 0 16px; }
 
         .method-steps {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
         }
 
-        .method-steps span {
-            padding: 6px 10px;
+        .method-step {
+            padding: 14px 15px;
             border: 1px solid var(--line);
-            border-radius: 999px;
+            border-radius: 6px;
             color: var(--body);
             background: #fff;
+        }
+
+        .method-step h3 {
+            margin: 0 0 6px;
+            color: var(--ink);
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .method-step p {
+            margin: 0;
+            color: var(--body);
             font-size: 12px;
-            font-weight: 600;
+            line-height: 1.5;
         }
 
         .abstract-copy {
@@ -813,6 +824,7 @@
             .dataset-layout { grid-template-columns: 1fr; gap: 24px; }
             .dataset-copy .section-heading,
             .dataset-copy .section-lead { text-align: center; }
+            .method-steps { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 620px) {
@@ -903,7 +915,7 @@
                     <div class="media-frame teaser-frame" data-placeholder="Add the RESELF teaser figure">
                         <img src="assets/fig_teaser.png" alt="RESELF contrasts self-blind scene reconstruction, world-blind motion reconstruction, and joint scene-and-self reconstruction." loading="eager">
                     </div>
-                    <figcaption class="caption" id="teaser-caption">RESELF unifies the visible world and the unseen self in a shared metric frame.</figcaption>
+                    <figcaption class="caption" id="teaser-caption"><strong>Overview.</strong> Scene reconstruction recovers the visible environment but omits the wearer, while motion reconstruction estimates the unseen body without metric scene context. RESELF jointly recovers scene geometry, camera motion, and full-body motion in one shared coordinate frame.</figcaption>
                 </figure>
             </div>
         </section>
@@ -911,19 +923,28 @@
         <section id="method">
             <div class="container">
                 <h2 class="section-heading">Method</h2>
-                <p class="section-lead">Metric geometry conditions motion generation; kinematic feedback improves camera tracking.</p>
+                <p class="section-lead">RESELF transfers large-scale geometry priors to egocentric video, then uses the recovered world to reconstruct the unseen wearer.</p>
 
                 <figure class="method-figure">
                     <div class="media-frame method-frame" data-placeholder="Add the RESELF method overview">
                         <img src="assets/fig_inference.png" alt="Overview of the RESELF geometry backbone, motion head, and closed-loop feedback." loading="lazy">
                     </div>
-                    <figcaption class="caption">A geometry backbone, conditional motion head, and closed-loop camera refinement.</figcaption>
+                    <figcaption class="caption"><strong>Pipeline.</strong> Given a monocular egocentric video, a Pi3X-based geometry backbone predicts metric pointmaps, camera poses, and scene-aware register tokens. The recovered trajectory and pooled geometry features condition a diffusion motion head to generate SMPL-X motion, whose kinematic signal is fed back to refine camera estimation.</figcaption>
                 </figure>
 
                 <div class="method-steps" aria-label="RESELF method stages">
-                    <span>1 · Metric geometry</span>
-                    <span>2 · Conditioned motion</span>
-                    <span>3 · Kinematic feedback</span>
+                    <article class="method-step">
+                        <h3>1 · Metric geometry</h3>
+                        <p>Frame-wise metric-scale and relative-egomotion objectives adapt the geometry backbone to rapid head motion and dynamic egocentric video.</p>
+                    </article>
+                    <article class="method-step">
+                        <h3>2 · Conditioned motion</h3>
+                        <p>The recovered camera trajectory anchors global body motion, while scene-aware register tokens condition diffusion-based SMPL-X reconstruction.</p>
+                    </article>
+                    <article class="method-step">
+                        <h3>3 · Kinematic feedback</h3>
+                        <p>A frozen motion prior propagates kinematic supervision through the trajectory condition to refine camera tracking in a closed loop.</p>
+                    </article>
                 </div>
             </div>
         </section>
@@ -1019,11 +1040,11 @@
                 <div class="qualitative-grid">
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a local articulation comparison"><img src="assets/fig_motion1.png" alt="Qualitative comparison of UniEgoMotion and RESELF body articulation." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Local articulation.</strong> More accurate body and hand pose.</figcaption>
+                        <figcaption class="caption"><strong>Local articulation.</strong> GT (green), UniEgoMotion (blue), and RESELF (orange) are compared after local alignment, highlighting body and hand pose accuracy.</figcaption>
                     </figure>
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a global trajectory comparison"><img src="assets/fig_motion2.png" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Global alignment.</strong> Less root drift in the scene.</figcaption>
+                        <figcaption class="caption"><strong>Global alignment.</strong> The top-down comparison shows how global root position and orientation remain aligned with the reconstructed scene over time.</figcaption>
                     </figure>
                 </div>
             </div>
@@ -1032,7 +1053,7 @@
         <section class="band" id="abstract">
             <div class="container">
                 <h2 class="section-heading">Abstract</h2>
-                <p class="abstract-copy">RESELF jointly reconstructs metric scene geometry, camera motion, and the unseen wearer's full-body motion from monocular egocentric video. A geometry foundation model is adapted with metric-scale and relative-pose objectives, while its camera trajectory and geometric features condition motion generation. Closed-loop kinematic feedback further improves camera tracking. We also introduce EE4D-JSM for aligned scene, camera, and SMPL-X supervision.</p>
+                <p class="abstract-copy">Complete 3D perception from egocentric video requires recovering the surrounding scene and the wearer's full-body motion in a shared metric frame. Existing methods typically address scene reconstruction and motion estimation separately: scene reconstruction methods ignore the wearer, whereas motion estimation methods lack explicit scene geometry and often depend on external trajectories. We propose RESELF, a unified framework that couples deterministic metric geometry reconstruction with geometry-conditioned motion generation. RESELF adapts a geometry foundation model to egocentric video using frame-wise scale and relative-pose consistency objectives. Its camera trajectory and latent geometric features condition a diffusion model that recovers the wearer's motion, while closed-loop kinematic feedback further refines the camera head. We also curate EE4D-JSM with aligned scene, camera, and full-body motion supervision. RESELF outperforms state-of-the-art methods designed for the individual tasks across depth estimation, camera tracking, and full-body motion estimation.</p>
             </div>
         </section>
 
