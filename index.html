@@ -977,7 +977,7 @@
                         <input class="demo-progress" id="demo-progress" type="range" min="0" max="1" step="0.01" value="0" aria-label="Demo video timeline">
                         <span class="demo-time" id="demo-time">0:00 / 0:00</span>
                     </div>
-                    <p class="demo-note">The current-frame point clouds, body meshes, cameras, egocentric input, and four exocentric views share one timeline.</p>
+                    <p class="demo-note">All seven views share one timeline. The predicted and ground-truth 3D views also stay linked while rotating, zooming, or panning.</p>
                 </div>
             </div>
         </section>
@@ -1521,6 +1521,21 @@
                 this.controls.update();
             }
 
+            copyViewFrom(source) {
+                if (!source) return;
+                this.camera.position.copy(source.camera.position);
+                this.camera.quaternion.copy(source.camera.quaternion);
+                this.camera.up.copy(source.camera.up);
+                this.camera.zoom = source.camera.zoom;
+                this.camera.near = source.camera.near;
+                this.camera.far = source.camera.far;
+                this.controls.target.copy(source.controls.target);
+                this.controls.minDistance = source.controls.minDistance;
+                this.controls.maxDistance = source.controls.maxDistance;
+                this.camera.updateProjectionMatrix();
+                this.controls.update();
+            }
+
             render() {
                 this.controls.update();
                 this.renderer.render(this.scene, this.camera);
@@ -1561,6 +1576,26 @@
         let demo3dReady = false;
         let demoFrameCount = 80;
         let demoSceneLoad = 0;
+        let demoViewSyncing = false;
+        let demoViewSyncEnabled = false;
+
+        const syncDemoView = (source, target) => {
+            if (!demoViewSyncEnabled || demoViewSyncing || !source || !target) return;
+            demoViewSyncing = true;
+            target.copyViewFrom(source);
+            demoViewSyncing = false;
+        };
+
+        predViewer?.controls.addEventListener("change", () => syncDemoView(predViewer, gtViewer));
+        gtViewer?.controls.addEventListener("change", () => syncDemoView(gtViewer, predViewer));
+
+        const resetLinkedDemoView = () => {
+            if (!predViewer || !gtViewer) return;
+            demoViewSyncEnabled = false;
+            predViewer.resetView();
+            gtViewer.copyViewFrom(predViewer);
+            demoViewSyncEnabled = true;
+        };
 
         const formatDemoTime = (seconds) => {
             if (!Number.isFinite(seconds)) return "0:00";
@@ -1643,6 +1678,7 @@
             const loadId = ++demoSceneLoad;
             pauseAllDemoVideos();
             demo3dReady = false;
+            demoViewSyncEnabled = false;
             demoPlayButton.disabled = true;
             demoProgress.disabled = true;
             let selectedIndex = 0;
@@ -1671,6 +1707,8 @@
                     gtViewer.load(scene.interactive, manifest, demoInput),
                 ]);
                 if (loadId !== demoSceneLoad) return;
+                gtViewer.copyViewFrom(predViewer);
+                demoViewSyncEnabled = true;
                 demo3dReady = true;
                 demoPlayButton.disabled = false;
                 demoProgress.disabled = false;
@@ -1709,8 +1747,8 @@
             updateDemoControls(0);
         });
         demoProgress.addEventListener("input", () => syncDemoTime(Number(demoProgress.value)));
-        document.getElementById("demo-pred-view-reset").addEventListener("click", () => predViewer?.resetView());
-        document.getElementById("demo-gt-view-reset").addEventListener("click", () => gtViewer?.resetView());
+        document.getElementById("demo-pred-view-reset").addEventListener("click", resetLinkedDemoView);
+        document.getElementById("demo-gt-view-reset").addEventListener("click", resetLinkedDemoView);
 
         const renderDemo = () => {
             updateDemo3dFrame();
