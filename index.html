@@ -1413,22 +1413,40 @@
             createCameraFrustum(cameraData, bounds, color) {
                 this.cameraData = cameraData;
                 const frustumVertices = new Float32Array([
-                    0, 0, 0, -0.7, -0.5, 1,
-                    0, 0, 0, 0.7, -0.5, 1,
-                    0, 0, 0, 0.7, 0.5, 1,
-                    0, 0, 0, -0.7, 0.5, 1,
-                    -0.7, -0.5, 1, 0.7, -0.5, 1,
-                    0.7, -0.5, 1, 0.7, 0.5, 1,
-                    0.7, 0.5, 1, -0.7, 0.5, 1,
-                    -0.7, 0.5, 1, -0.7, -0.5, 1,
+                    0, 0, 0, -0.7, -0.7, 1,
+                    0, 0, 0, 0.7, -0.7, 1,
+                    0, 0, 0, 0.7, 0.7, 1,
+                    0, 0, 0, -0.7, 0.7, 1,
+                    -0.7, -0.7, 1, 0.7, -0.7, 1,
+                    0.7, -0.7, 1, 0.7, 0.7, 1,
+                    0.7, 0.7, 1, -0.7, 0.7, 1,
+                    -0.7, 0.7, 1, -0.7, -0.7, 1,
                 ]);
                 const frustumGeometry = new THREE.BufferGeometry();
                 frustumGeometry.setAttribute("position", new THREE.BufferAttribute(frustumVertices, 3));
-                this.cameraFrustum = new THREE.LineSegments(
+                const frustumLines = new THREE.LineSegments(
                     frustumGeometry,
                     new THREE.LineBasicMaterial({ color }),
                 );
-                this.cameraFrustumScale = Math.max(bounds.radius * 0.035, 0.04);
+                frustumLines.renderOrder = 4;
+
+                const imageGeometry = new THREE.PlaneGeometry(1.4, 1.4);
+                const imageMaterial = new THREE.MeshBasicMaterial({
+                    map: this.videoTexture,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.92,
+                    depthTest: true,
+                    depthWrite: false,
+                    toneMapped: false,
+                });
+                const imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+                imagePlane.position.z = 1.002;
+                imagePlane.renderOrder = 3;
+
+                this.cameraFrustum = new THREE.Group();
+                this.cameraFrustum.add(imagePlane, frustumLines);
+                this.cameraFrustumScale = Math.max(bounds.radius * 0.055, 0.06);
                 this.cameraFrustum.matrixAutoUpdate = false;
                 this.content.add(this.cameraFrustum);
             }
