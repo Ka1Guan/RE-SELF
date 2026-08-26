@@ -1372,7 +1372,10 @@
                         void main() {
                             vec2 delta = gl_PointCoord - vec2(0.5);
                             if (dot(delta, delta) > 0.25) discard;
-                            vec3 color = texture2D(uVideo, vec2(vVideoUv.x, 1.0 - vVideoUv.y)).rgb;
+                            // Demo videos are encoded 90 degrees clockwise relative to the
+                            // original 448x448 RGB coordinates used by both Pred and GT UVs.
+                            vec2 rotatedVideoUv = vec2(1.0 - vVideoUv.y, 1.0 - vVideoUv.x);
+                            vec3 color = texture2D(uVideo, rotatedVideoUv).rgb;
                             if (dot(color, color) < 0.001) color = uFallbackColor;
                             gl_FragColor = vec4(color, 1.0);
                             #include <colorspace_fragment>
