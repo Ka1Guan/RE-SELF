@@ -1627,8 +1627,14 @@
                 if (!source || !source.bounds || !this.bounds) return;
                 const makeBasis = (viewer) => {
                     const up = new THREE.Vector3().fromArray(viewer.displayUp).normalize();
-                    const horizontal = new THREE.Vector3(1.0, -1.0, 0.25);
+                    const horizontal = viewer.cameraData
+                        ? new THREE.Vector3(viewer.cameraData[2], viewer.cameraData[6], viewer.cameraData[10])
+                        : new THREE.Vector3(1.0, -1.0, 0.25);
                     horizontal.addScaledVector(up, -horizontal.dot(up));
+                    if (horizontal.lengthSq() < 1e-6) {
+                        horizontal.set(1.0, -1.0, 0.25);
+                        horizontal.addScaledVector(up, -horizontal.dot(up));
+                    }
                     if (horizontal.lengthSq() < 1e-6) {
                         horizontal.crossVectors(up, new THREE.Vector3(0, 1, 0));
                     }
