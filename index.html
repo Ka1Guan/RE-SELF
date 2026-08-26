@@ -254,8 +254,11 @@
         .media-frame video { background: #111; }
 
         .demo-stage {
-            width: min(960px, 100%);
+            position: relative;
+            left: 50%;
+            width: min(1120px, calc(100vw - 40px));
             margin: 0 auto;
+            transform: translateX(-50%);
         }
 
         .demo-scene-strip {
@@ -351,59 +354,68 @@
 
         .demo-results-grid {
             display: grid;
-            grid-template-columns: minmax(0, 3fr) minmax(190px, 1fr);
-            align-items: center;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
             gap: 16px;
             width: 100%;
             margin-top: 0;
         }
 
-        .demo-gt {
+        .demo-viewer-frame {
+            position: relative;
+            overflow: hidden;
             width: 100%;
-        }
-
-        .demo-gt .demo-video-frame { aspect-ratio: 1.18 / 1; }
-
-        .demo-reconstruction-viewport {
-            aspect-ratio: 1.28 / 1;
-        }
-
-        .demo-reconstruction-viewport video {
-            cursor: grab;
-            touch-action: none;
-            user-select: none;
-            transform-origin: center center;
-            transition: transform 120ms ease;
-        }
-
-        .demo-reconstruction-viewport.is-dragging video {
-            cursor: grabbing;
-            transition: none;
-        }
-
-        .demo-zoom-controls {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 5px;
-            margin-top: 7px;
-        }
-
-        .demo-zoom-controls button {
-            min-width: 30px;
-            min-height: 28px;
-            padding: 3px 8px;
+            aspect-ratio: 4 / 3;
             border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #111;
+        }
+
+        .demo-viewer-mount,
+        .demo-viewer-mount canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        .demo-viewer-mount canvas { cursor: grab; }
+        .demo-viewer-mount canvas:active { cursor: grabbing; }
+
+        .demo-viewer-status {
+            position: absolute;
+            inset: auto 9px 9px 9px;
+            padding: 5px 8px;
             border-radius: 4px;
-            color: var(--body);
-            background: #fff;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.68);
+            font-size: 11px;
+            line-height: 1.35;
+            pointer-events: none;
+        }
+
+        .demo-viewer-status[hidden] { display: none; }
+
+        .demo-view-reset {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            z-index: 2;
+            display: grid;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.58);
             cursor: pointer;
-            font-size: 13px;
+            font-size: 18px;
             line-height: 1;
         }
 
-        .demo-zoom-controls button:hover { border-color: var(--accent); color: var(--accent); }
-        .demo-zoom-controls output { min-width: 42px; color: var(--muted); font-size: 11px; text-align: center; }
+        .demo-view-reset:hover { background: rgba(0, 0, 0, 0.82); }
 
         .demo-exo-grid {
             display: grid;
@@ -787,7 +799,7 @@
             .demo-scene-strip { gap: 6px; }
             .demo-scene-card h3 { margin-right: 5px; margin-left: 5px; font-size: 11px; }
             .demo-results-grid { grid-template-columns: 1fr; }
-            .demo-gt { width: min(78%, 320px); justify-self: center; }
+            .demo-gt { width: 100%; }
             .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
             .benchmark-table th,
@@ -920,7 +932,7 @@
         <section class="band" id="demo">
             <div class="container">
                 <h2 class="section-heading">Joint reconstruction in action</h2>
-                <p class="section-lead">Choose an egocentric input to inspect the synchronized reconstruction, ground-truth motion, and exocentric observations.</p>
+                <p class="section-lead">Choose an egocentric input to inspect synchronized predicted and ground-truth reconstruction from any viewpoint.</p>
 
                 <div class="demo-stage" aria-live="polite">
                     <div class="demo-scene-strip" aria-label="Choose an egocentric input">
@@ -933,17 +945,19 @@
                     <div class="demo-results-grid">
                         <figure class="demo-card demo-reconstruction">
                             <h3>RE-SELF reconstruction</h3>
-                            <div class="demo-video-frame demo-reconstruction-viewport"><video id="demo-reconstruction" muted playsinline preload="metadata"></video></div>
-                            <div class="demo-zoom-controls" aria-label="Reconstruction zoom controls">
-                                <button id="demo-zoom-out" type="button" title="Zoom out">−</button>
-                                <button id="demo-zoom-reset" type="button">Reset</button>
-                                <button id="demo-zoom-in" type="button" title="Zoom in">+</button>
-                                <output id="demo-zoom-value">100%</output>
+                            <div class="demo-viewer-frame">
+                                <div class="demo-viewer-mount" id="demo-pred-viewer" aria-label="Interactive RE-SELF reconstruction"></div>
+                                <button class="demo-view-reset" id="demo-pred-view-reset" type="button" title="Reset prediction view" aria-label="Reset prediction view">&#8634;</button>
+                                <span class="demo-viewer-status" id="demo-pred-status">Loading 3D reconstruction...</span>
                             </div>
                         </figure>
                         <figure class="demo-card demo-gt">
-                            <h3>GT motion</h3>
-                            <div class="demo-video-frame"><video id="demo-gt" muted playsinline preload="metadata"></video></div>
+                            <h3>Ground-truth reconstruction</h3>
+                            <div class="demo-viewer-frame">
+                                <div class="demo-viewer-mount" id="demo-gt-viewer" aria-label="Interactive ground-truth reconstruction"></div>
+                                <button class="demo-view-reset" id="demo-gt-view-reset" type="button" title="Reset ground-truth view" aria-label="Reset ground-truth view">&#8634;</button>
+                                <span class="demo-viewer-status" id="demo-gt-status">Loading 3D reconstruction...</span>
+                            </div>
                         </figure>
                     </div>
 
@@ -963,7 +977,7 @@
                         <input class="demo-progress" id="demo-progress" type="range" min="0" max="1" step="0.01" value="0" aria-label="Demo video timeline">
                         <span class="demo-time" id="demo-time">0:00 / 0:00</span>
                     </div>
-                    <p class="demo-note">All seven videos are synchronized. Use the controls below the main views to play, pause, reset, or scrub the selected scene.</p>
+                    <p class="demo-note">The current-frame point clouds, body meshes, cameras, egocentric input, and four exocentric views share one timeline.</p>
                 </div>
             </div>
         </section>
@@ -1086,7 +1100,18 @@
         </div>
     </footer>
 
-    <script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./assets/vendor/three/three.module.js",
+                "three/addons/": "./assets/vendor/three/addons/"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from "three";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
         const projectImages = document.querySelectorAll(".media-frame img");
         projectImages.forEach((image) => {
             const markMissing = () => image.parentElement.classList.add("is-missing");
@@ -1094,70 +1119,413 @@
             if (image.complete && image.naturalWidth === 0) markMissing();
         });
 
-        // Demo videos are expected under assets/demo_videos/sample-01-cooking ... sample-05-piano.
-        // Change only the paths below if the uploaded files use different names.
-        const demoScenes = {
-            "sample-01-cooking": {
-                label: "Sample 01",
-                input: "assets/demo_videos/sample-01-cooking/input.mp4",
-                reconstruction: "assets/demo_videos/sample-01-cooking/reconstruction.mp4",
-                gt: "assets/demo_videos/sample-01-cooking/gt-motion.mp4",
-                exo: [
-                    "assets/demo_videos/sample-01-cooking/exo-01.mp4",
-                    "assets/demo_videos/sample-01-cooking/exo-02.mp4",
-                    "assets/demo_videos/sample-01-cooking/exo-03.mp4",
-                    "assets/demo_videos/sample-01-cooking/exo-04.mp4",
-                ],
-            },
-            "sample-02-basketball": {
-                label: "Sample 02",
-                input: "assets/demo_videos/sample-02-basketball/input.mp4",
-                reconstruction: "assets/demo_videos/sample-02-basketball/reconstruction.mp4",
-                gt: "assets/demo_videos/sample-02-basketball/gt-motion.mp4",
-                exo: [
-                    "assets/demo_videos/sample-02-basketball/exo-01.mp4",
-                    "assets/demo_videos/sample-02-basketball/exo-02.mp4",
-                    "assets/demo_videos/sample-02-basketball/exo-03.mp4",
-                    "assets/demo_videos/sample-02-basketball/exo-04.mp4",
-                ],
-            },
-            "sample-03-soccer": {
-                label: "Sample 03",
-                input: "assets/demo_videos/sample-03-soccer/input.mp4",
-                reconstruction: "assets/demo_videos/sample-03-soccer/reconstruction.mp4",
-                gt: "assets/demo_videos/sample-03-soccer/gt-motion.mp4",
-                exo: [
-                    "assets/demo_videos/sample-03-soccer/exo-01.mp4",
-                    "assets/demo_videos/sample-03-soccer/exo-02.mp4",
-                    "assets/demo_videos/sample-03-soccer/exo-03.mp4",
-                    "assets/demo_videos/sample-03-soccer/exo-04.mp4",
-                ],
-            },
-            "sample-04-dance": {
-                label: "Sample 04",
-                input: "assets/demo_videos/sample-04-dance/input.mp4",
-                reconstruction: "assets/demo_videos/sample-04-dance/reconstruction.mp4",
-                gt: "assets/demo_videos/sample-04-dance/gt-motion.mp4",
-                exo: [
-                    "assets/demo_videos/sample-04-dance/exo-01.mp4",
-                    "assets/demo_videos/sample-04-dance/exo-02.mp4",
-                    "assets/demo_videos/sample-04-dance/exo-03.mp4",
-                    "assets/demo_videos/sample-04-dance/exo-04.mp4",
-                ],
-            },
-            "sample-05-piano": {
-                label: "Sample 05",
-                input: "assets/demo_videos/sample-05-piano/input.mp4",
-                reconstruction: "assets/demo_videos/sample-05-piano/reconstruction.mp4",
-                gt: "assets/demo_videos/sample-05-piano/gt-motion.mp4",
-                exo: [
-                    "assets/demo_videos/sample-05-piano/exo-01.mp4",
-                    "assets/demo_videos/sample-05-piano/exo-02.mp4",
-                    "assets/demo_videos/sample-05-piano/exo-03.mp4",
-                    "assets/demo_videos/sample-05-piano/exo-04.mp4",
-                ],
-            },
+        const demoScenes = Object.fromEntries([
+            ["sample-01-cooking", "Cooking"],
+            ["sample-02-basketball", "Basketball"],
+            ["sample-03-soccer", "Soccer"],
+            ["sample-04-dance", "Dance"],
+            ["sample-05-piano", "Piano"],
+        ].map(([id, label]) => [id, {
+            label,
+            interactive: `assets/demo_scenes/${id}/`,
+            exo: [1, 2, 3, 4].map((index) => `assets/demo_videos/${id}/exo-0${index}.mp4`),
+        }]));
+
+        const fetchBuffer = async (url) => {
+            const response = await fetch(url, { cache: "force-cache" });
+            if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
+            return response.arrayBuffer();
         };
+
+        const fetchJson = async (url) => {
+            const response = await fetch(url, { cache: "force-cache" });
+            if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
+            return response.json();
+        };
+
+        const setMatrixFromRowMajor = (matrix, values, offset = 0) => {
+            matrix.set(
+                values[offset], values[offset + 1], values[offset + 2], values[offset + 3],
+                values[offset + 4], values[offset + 5], values[offset + 6], values[offset + 7],
+                values[offset + 8], values[offset + 9], values[offset + 10], values[offset + 11],
+                values[offset + 12], values[offset + 13], values[offset + 14], values[offset + 15],
+            );
+        };
+
+        class ReconstructionViewer {
+            constructor({ mount, status, mode, meshColor }) {
+                this.mount = mount;
+                this.status = status;
+                this.mode = mode;
+                this.meshColor = meshColor;
+                this.generation = 0;
+                this.ready = false;
+                this.currentFrame = -1;
+
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x111315);
+                this.camera = new THREE.PerspectiveCamera(48, 1, 0.01, 1000);
+                this.camera.up.set(0, 0, 1);
+                this.renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    powerPreference: "high-performance",
+                    preserveDrawingBuffer: true,
+                });
+                this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                this.mount.replaceChildren(this.renderer.domElement);
+
+                this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.08;
+                this.controls.screenSpacePanning = true;
+                this.controls.minDistance = 0.05;
+                this.controls.maxDistance = 500;
+
+                this.scene.add(new THREE.HemisphereLight(0xffffff, 0x39404a, 2.0));
+                const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+                keyLight.position.set(3, -4, 6);
+                this.scene.add(keyLight);
+                this.content = new THREE.Group();
+                this.scene.add(this.content);
+
+                this.resizeObserver = new ResizeObserver(() => this.resize());
+                this.resizeObserver.observe(this.mount);
+                this.resize();
+            }
+
+            resize() {
+                const width = Math.max(this.mount.clientWidth, 1);
+                const height = Math.max(this.mount.clientHeight, 1);
+                this.camera.aspect = width / height;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(width, height, false);
+                if (this.pointMaterial) {
+                    this.pointMaterial.uniforms.uPointSize.value = 1.65 * Math.min(window.devicePixelRatio || 1, 2);
+                }
+            }
+
+            setStatus(message) {
+                this.status.textContent = message;
+                this.status.hidden = !message;
+            }
+
+            clear() {
+                this.ready = false;
+                this.currentFrame = -1;
+                this.content.traverse((object) => {
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        const materials = Array.isArray(object.material) ? object.material : [object.material];
+                        materials.forEach((material) => material.dispose());
+                    }
+                });
+                this.scene.remove(this.content);
+                this.content = new THREE.Group();
+                this.scene.add(this.content);
+                if (this.videoTexture) this.videoTexture.dispose();
+                this.videoTexture = null;
+                this.pointMaterial = null;
+                this.pointGeometry = null;
+                this.meshGeometry = null;
+                this.cameraFrustum = null;
+            }
+
+            createVideoTexture(video) {
+                const texture = new THREE.VideoTexture(video);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.generateMipmaps = false;
+                return texture;
+            }
+
+            createPointMaterial(prediction) {
+                const vertexShader = prediction ? `
+                    attribute float pointDepth;
+                    attribute vec2 videoUv;
+                    uniform mat4 cameraToWorld;
+                    uniform float uPointSize;
+                    varying vec2 vVideoUv;
+                    void main() {
+                        vVideoUv = videoUv;
+                        if (pointDepth <= 0.0) {
+                            gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+                            gl_PointSize = 0.0;
+                            return;
+                        }
+                        vec4 worldPosition = cameraToWorld * vec4(position * pointDepth, 1.0);
+                        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+                        gl_PointSize = uPointSize;
+                    }
+                ` : `
+                    attribute vec2 videoUv;
+                    uniform float uPointSize;
+                    varying vec2 vVideoUv;
+                    void main() {
+                        vVideoUv = videoUv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        gl_PointSize = uPointSize;
+                    }
+                `;
+                return new THREE.ShaderMaterial({
+                    uniforms: {
+                        uVideo: { value: this.videoTexture },
+                        uPointSize: { value: 1.65 * Math.min(window.devicePixelRatio || 1, 2) },
+                        cameraToWorld: { value: new THREE.Matrix4() },
+                        uFallbackColor: {
+                            value: new THREE.Color(this.mode === "prediction" ? 0x668fa8 : 0x6f9d82),
+                        },
+                    },
+                    vertexShader,
+                    fragmentShader: `
+                        uniform sampler2D uVideo;
+                        uniform vec3 uFallbackColor;
+                        varying vec2 vVideoUv;
+                        void main() {
+                            vec2 delta = gl_PointCoord - vec2(0.5);
+                            if (dot(delta, delta) > 0.25) discard;
+                            vec3 color = texture2D(uVideo, vec2(vVideoUv.x, 1.0 - vVideoUv.y)).rgb;
+                            if (dot(color, color) < 0.001) color = uFallbackColor;
+                            gl_FragColor = vec4(color, 1.0);
+                            #include <colorspace_fragment>
+                        }
+                    `,
+                    transparent: false,
+                    depthTest: true,
+                    depthWrite: true,
+                });
+            }
+
+            createMesh(meshSpec, verticesBuffer, facesBuffer) {
+                this.meshSpec = meshSpec;
+                this.meshQuantized = new Uint16Array(verticesBuffer);
+                this.meshVertexCount = meshSpec.shape[1];
+                this.meshPositions = new Float32Array(this.meshVertexCount * 3);
+                this.meshGeometry = new THREE.BufferGeometry();
+                const position = new THREE.BufferAttribute(this.meshPositions, 3);
+                position.setUsage(THREE.DynamicDrawUsage);
+                this.meshGeometry.setAttribute("position", position);
+                this.meshGeometry.setIndex(new THREE.BufferAttribute(new Uint32Array(facesBuffer), 1));
+                const material = new THREE.MeshStandardMaterial({
+                    color: this.meshColor,
+                    roughness: 0.68,
+                    metalness: 0,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.78,
+                });
+                const mesh = new THREE.Mesh(this.meshGeometry, material);
+                mesh.renderOrder = 2;
+                this.content.add(mesh);
+            }
+
+            createCameraFrustum(cameraData, bounds, color) {
+                this.cameraData = cameraData;
+                const frustumVertices = new Float32Array([
+                    0, 0, 0, -0.7, -0.5, 1,
+                    0, 0, 0, 0.7, -0.5, 1,
+                    0, 0, 0, 0.7, 0.5, 1,
+                    0, 0, 0, -0.7, 0.5, 1,
+                    -0.7, -0.5, 1, 0.7, -0.5, 1,
+                    0.7, -0.5, 1, 0.7, 0.5, 1,
+                    0.7, 0.5, 1, -0.7, 0.5, 1,
+                    -0.7, 0.5, 1, -0.7, -0.5, 1,
+                ]);
+                const frustumGeometry = new THREE.BufferGeometry();
+                frustumGeometry.setAttribute("position", new THREE.BufferAttribute(frustumVertices, 3));
+                this.cameraFrustum = new THREE.LineSegments(
+                    frustumGeometry,
+                    new THREE.LineBasicMaterial({ color }),
+                );
+                this.cameraFrustumScale = Math.max(bounds.radius * 0.035, 0.04);
+                this.cameraFrustum.matrixAutoUpdate = false;
+                this.content.add(this.cameraFrustum);
+            }
+
+            createPredictionPoints(spec, raysBuffer, depthBuffers) {
+                const pointCount = spec.pointCount;
+                this.predPointSpec = spec;
+                this.predDepth = new Uint16Array(this.numFrames * pointCount);
+                spec.chunks.forEach((chunk, index) => {
+                    this.predDepth.set(new Uint16Array(depthBuffers[index]), chunk.start * pointCount);
+                });
+                this.pointDepth = new Float32Array(pointCount);
+                const uv = new Float32Array(pointCount * 2);
+                for (let y = 0; y < spec.height; y += 1) {
+                    for (let x = 0; x < spec.width; x += 1) {
+                        const index = y * spec.width + x;
+                        uv[index * 2] = (x + 0.5) / spec.width;
+                        uv[index * 2 + 1] = (y + 0.5) / spec.height;
+                    }
+                }
+                this.pointGeometry = new THREE.BufferGeometry();
+                this.pointGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(raysBuffer), 3));
+                const depthAttribute = new THREE.BufferAttribute(this.pointDepth, 1);
+                depthAttribute.setUsage(THREE.DynamicDrawUsage);
+                this.pointGeometry.setAttribute("pointDepth", depthAttribute);
+                this.pointGeometry.setAttribute("videoUv", new THREE.BufferAttribute(uv, 2));
+                this.pointMaterial = this.createPointMaterial(true);
+                const points = new THREE.Points(this.pointGeometry, this.pointMaterial);
+                points.frustumCulled = false;
+                this.content.add(points);
+            }
+
+            createGroundTruthPoints(spec, pointsBuffer, uvBuffer) {
+                this.gtPointSpec = spec;
+                this.gtPoints = new Float32Array(pointsBuffer);
+                this.gtUv = new Uint16Array(uvBuffer);
+                const maxCount = Math.max(...spec.counts);
+                this.gtFramePositions = new Float32Array(maxCount * 3);
+                this.gtFrameUv = new Float32Array(maxCount * 2);
+                this.pointGeometry = new THREE.BufferGeometry();
+                const position = new THREE.BufferAttribute(this.gtFramePositions, 3);
+                const uv = new THREE.BufferAttribute(this.gtFrameUv, 2);
+                position.setUsage(THREE.DynamicDrawUsage);
+                uv.setUsage(THREE.DynamicDrawUsage);
+                this.pointGeometry.setAttribute("position", position);
+                this.pointGeometry.setAttribute("videoUv", uv);
+                this.pointMaterial = this.createPointMaterial(false);
+                const points = new THREE.Points(this.pointGeometry, this.pointMaterial);
+                points.frustumCulled = false;
+                this.content.add(points);
+            }
+
+            async load(base, manifest, video) {
+                const generation = ++this.generation;
+                this.clear();
+                this.setStatus("Loading full current-frame point clouds...");
+                this.numFrames = manifest.numFrames;
+                const spec = this.mode === "prediction" ? manifest.prediction : manifest.groundTruth;
+                this.bounds = spec.bounds;
+                this.displayUp = spec.displayUp || [0, 0, 1];
+                this.videoTexture = this.createVideoTexture(video);
+
+                try {
+                    if (this.mode === "prediction") {
+                        const [raysBuffer, depthBuffers, verticesBuffer, facesBuffer, cameraBuffer] = await Promise.all([
+                            fetchBuffer(base + spec.pointCloud.rays),
+                            Promise.all(spec.pointCloud.chunks.map((chunk) => fetchBuffer(base + chunk.file))),
+                            fetchBuffer(base + spec.mesh.vertices),
+                            fetchBuffer(base + spec.mesh.faces),
+                            fetchBuffer(base + spec.camera.file),
+                        ]);
+                        if (generation !== this.generation) return;
+                        this.createPredictionPoints(spec.pointCloud, raysBuffer, depthBuffers);
+                        this.createMesh(spec.mesh, verticesBuffer, facesBuffer);
+                        this.createCameraFrustum(new Float32Array(cameraBuffer), spec.bounds, 0x5aa7ff);
+                    } else {
+                        const [pointsBuffer, uvBuffer, verticesBuffer, facesBuffer, cameraBuffer] = await Promise.all([
+                            fetchBuffer(base + spec.pointCloud.points),
+                            fetchBuffer(base + spec.pointCloud.uv),
+                            fetchBuffer(base + spec.mesh.vertices),
+                            fetchBuffer(base + spec.mesh.faces),
+                            fetchBuffer(base + spec.camera.file),
+                        ]);
+                        if (generation !== this.generation) return;
+                        this.createGroundTruthPoints(spec.pointCloud, pointsBuffer, uvBuffer);
+                        this.createMesh(spec.mesh, verticesBuffer, facesBuffer);
+                        this.createCameraFrustum(new Float32Array(cameraBuffer), spec.bounds, 0x79d39a);
+                    }
+                    this.ready = true;
+                    this.resetView();
+                    this.updateFrame(0);
+                    this.setStatus("");
+                } catch (error) {
+                    console.error(error);
+                    if (generation === this.generation) this.setStatus("Interactive reconstruction could not be loaded.");
+                    throw error;
+                }
+            }
+
+            updateMesh(frame) {
+                const stride = this.meshVertexCount * 3;
+                const sourceOffset = frame * stride;
+                const mins = this.meshSpec.min;
+                const scales = this.meshSpec.max.map((value, axis) => (value - mins[axis]) / 65535.0);
+                for (let index = 0; index < this.meshVertexCount; index += 1) {
+                    const target = index * 3;
+                    const source = sourceOffset + target;
+                    this.meshPositions[target] = mins[0] + this.meshQuantized[source] * scales[0];
+                    this.meshPositions[target + 1] = mins[1] + this.meshQuantized[source + 1] * scales[1];
+                    this.meshPositions[target + 2] = mins[2] + this.meshQuantized[source + 2] * scales[2];
+                }
+                this.meshGeometry.attributes.position.needsUpdate = true;
+                this.meshGeometry.computeVertexNormals();
+            }
+
+            updatePredictionPoints(frame) {
+                const spec = this.predPointSpec;
+                const pointCount = spec.pointCount;
+                const sourceOffset = frame * pointCount;
+                const depthMin = spec.depthMin[frame];
+                const depthScale = (spec.depthMax[frame] - depthMin) / spec.depthLevels;
+                for (let index = 0; index < pointCount; index += 1) {
+                    const value = this.predDepth[sourceOffset + index];
+                    this.pointDepth[index] = value === spec.depthInvalid ? -1 : depthMin + (value - 1) * depthScale;
+                }
+                this.pointGeometry.attributes.pointDepth.needsUpdate = true;
+                setMatrixFromRowMajor(this.pointMaterial.uniforms.cameraToWorld.value, this.cameraData, frame * 16);
+            }
+
+            updateGroundTruthPoints(frame) {
+                const spec = this.gtPointSpec;
+                const count = spec.counts[frame];
+                const sourceOffset = spec.offsets[frame];
+                this.gtFramePositions.set(this.gtPoints.subarray(sourceOffset * 3, (sourceOffset + count) * 3), 0);
+                for (let index = 0; index < count; index += 1) {
+                    const source = (sourceOffset + index) * 2;
+                    this.gtFrameUv[index * 2] = (this.gtUv[source] + 0.5) / spec.imageWidth;
+                    this.gtFrameUv[index * 2 + 1] = (this.gtUv[source + 1] + 0.5) / spec.imageHeight;
+                }
+                this.pointGeometry.setDrawRange(0, count);
+                this.pointGeometry.attributes.position.needsUpdate = true;
+                this.pointGeometry.attributes.videoUv.needsUpdate = true;
+            }
+
+            updateFrame(frame) {
+                if (!this.ready) return;
+                const clamped = Math.max(0, Math.min(this.numFrames - 1, frame));
+                if (clamped === this.currentFrame) return;
+                this.currentFrame = clamped;
+                if (this.mode === "prediction") this.updatePredictionPoints(clamped);
+                else this.updateGroundTruthPoints(clamped);
+                this.updateMesh(clamped);
+                setMatrixFromRowMajor(this.cameraFrustum.matrix, this.cameraData, clamped * 16);
+                this.cameraFrustum.matrix.scale(new THREE.Vector3(
+                    this.cameraFrustumScale,
+                    this.cameraFrustumScale,
+                    this.cameraFrustumScale,
+                ));
+                this.cameraFrustum.matrixWorldNeedsUpdate = true;
+            }
+
+            resetView() {
+                if (!this.bounds) return;
+                const center = new THREE.Vector3().fromArray(this.bounds.center);
+                const up = new THREE.Vector3().fromArray(this.displayUp).normalize();
+                const horizontal = new THREE.Vector3(1.0, -1.0, 0.25);
+                horizontal.addScaledVector(up, -horizontal.dot(up));
+                if (horizontal.lengthSq() < 1e-6) horizontal.crossVectors(up, new THREE.Vector3(0, 1, 0));
+                horizontal.normalize();
+                const direction = horizontal.multiplyScalar(0.9).addScaledVector(up, 0.45).normalize();
+                const radius = Math.max(this.bounds.radius, 0.5);
+                this.camera.up.copy(up);
+                this.camera.near = Math.max(radius / 1000, 0.002);
+                this.camera.far = Math.max(radius * 30, 100);
+                this.camera.position.copy(center).addScaledVector(direction, radius * 2.25);
+                this.controls.target.copy(center);
+                this.controls.minDistance = radius * 0.08;
+                this.controls.maxDistance = radius * 12;
+                this.camera.updateProjectionMatrix();
+                this.controls.update();
+            }
+
+            render() {
+                this.controls.update();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
 
         const demoSceneButtons = [...document.querySelectorAll(".demo-scene-card")];
         const demoPreviewVideos = demoSceneButtons.map((button) => button.querySelector("video"));
@@ -1165,22 +1533,34 @@
         const demoResetButton = document.getElementById("demo-reset");
         const demoProgress = document.getElementById("demo-progress");
         const demoTime = document.getElementById("demo-time");
-        const demoReconstruction = document.getElementById("demo-reconstruction");
-        const demoReconstructionViewport = demoReconstruction.parentElement;
-        const demoGt = document.getElementById("demo-gt");
         const demoExoVideos = ["demo-exo-01", "demo-exo-02", "demo-exo-03", "demo-exo-04"].map((id) => document.getElementById(id));
-        const demoOutputVideos = [demoReconstruction, demoGt, ...demoExoVideos];
-        const demoZoomOut = document.getElementById("demo-zoom-out");
-        const demoZoomReset = document.getElementById("demo-zoom-reset");
-        const demoZoomIn = document.getElementById("demo-zoom-in");
-        const demoZoomValue = document.getElementById("demo-zoom-value");
+        let predViewer = null;
+        let gtViewer = null;
+        try {
+            predViewer = new ReconstructionViewer({
+                mount: document.getElementById("demo-pred-viewer"),
+                status: document.getElementById("demo-pred-status"),
+                mode: "prediction",
+                meshColor: 0xc65d2e,
+            });
+            gtViewer = new ReconstructionViewer({
+                mount: document.getElementById("demo-gt-viewer"),
+                status: document.getElementById("demo-gt-status"),
+                mode: "groundTruth",
+                meshColor: 0x2f9a62,
+            });
+        } catch (error) {
+            console.error("WebGL initialization failed", error);
+            document.getElementById("demo-pred-status").textContent = "WebGL is unavailable in this browser.";
+            document.getElementById("demo-gt-status").textContent = "WebGL is unavailable in this browser.";
+        }
         let demoInput = demoPreviewVideos[0];
-        let demoVideos = [demoInput, ...demoOutputVideos];
-        let demoZoom = 1;
-        let demoPanX = 0;
-        let demoPanY = 0;
-        let demoDrag = null;
+        let demoVideos = [demoInput, ...demoExoVideos];
         let demoSyncing = false;
+        let demoPlaybackChanging = false;
+        let demo3dReady = false;
+        let demoFrameCount = 80;
+        let demoSceneLoad = 0;
 
         const formatDemoTime = (seconds) => {
             if (!Number.isFinite(seconds)) return "0:00";
@@ -1200,11 +1580,25 @@
             }
         };
 
-        const updateDemoControls = (time = demoVideos[0].currentTime || 0) => {
+        const currentDemoFrame = () => {
+            const duration = demoDuration();
+            if (!duration || demoFrameCount <= 1) return 0;
+            return Math.min(demoFrameCount - 1, Math.floor((demoInput.currentTime / duration) * demoFrameCount));
+        };
+
+        const updateDemo3dFrame = () => {
+            if (!demo3dReady) return;
+            const frame = currentDemoFrame();
+            predViewer.updateFrame(frame);
+            gtViewer.updateFrame(frame);
+        };
+
+        const updateDemoControls = (time = demoInput.currentTime || 0) => {
             const duration = demoDuration();
             demoProgress.max = duration || 1;
             demoProgress.value = Math.min(time, duration || 1);
             demoTime.textContent = `${formatDemoTime(time)} / ${formatDemoTime(duration)}`;
+            updateDemo3dFrame();
         };
 
         const syncDemoTime = (time) => {
@@ -1227,33 +1621,30 @@
             video.load();
         };
 
-        const clampDemoPan = () => {
-            const maxX = Math.max(0, (demoReconstructionViewport.clientWidth * (demoZoom - 1)) / 2);
-            const maxY = Math.max(0, (demoReconstructionViewport.clientHeight * (demoZoom - 1)) / 2);
-            demoPanX = Math.min(maxX, Math.max(-maxX, demoPanX));
-            demoPanY = Math.min(maxY, Math.max(-maxY, demoPanY));
+        const playAllDemoVideos = async () => {
+            if (!demo3dReady || demoPlaybackChanging) return;
+            demoPlaybackChanging = true;
+            await Promise.all(demoVideos.map((video) => video.play().catch(() => null)));
+            demoPlayButton.textContent = demoInput.paused ? "Play all" : "Pause all";
+            demoPlaybackChanging = false;
         };
 
-        const resetDemoPan = () => {
-            demoPanX = 0;
-            demoPanY = 0;
+        const pauseAllDemoVideos = () => {
+            if (demoPlaybackChanging) return;
+            demoPlaybackChanging = true;
+            demoVideos.forEach((video) => video.pause());
+            demoPlayButton.textContent = "Play all";
+            demoPlaybackChanging = false;
         };
 
-        const updateDemoZoom = () => {
-            clampDemoPan();
-            demoReconstruction.style.transform = `translate3d(${demoPanX}px, ${demoPanY}px, 0) scale(${demoZoom})`;
-            demoZoomValue.textContent = `${Math.round(demoZoom * 100)}%`;
-        };
-
-        const changeDemoZoom = (delta) => {
-            demoZoom = Math.min(2.5, Math.max(0.75, Number((demoZoom + delta).toFixed(2))));
-            updateDemoZoom();
-        };
-
-        const loadDemoScene = (sceneId) => {
+        const loadDemoScene = async (sceneId) => {
             const scene = demoScenes[sceneId];
             if (!scene) return;
+            const loadId = ++demoSceneLoad;
             pauseAllDemoVideos();
+            demo3dReady = false;
+            demoPlayButton.disabled = true;
+            demoProgress.disabled = true;
             let selectedIndex = 0;
             demoSceneButtons.forEach((button, index) => {
                 const active = button.dataset.scene === sceneId;
@@ -1265,29 +1656,31 @@
                 video.currentTime = 0;
             });
             demoInput = demoPreviewVideos[selectedIndex];
-            demoVideos = [demoInput, ...demoOutputVideos];
-            setDemoSource(demoReconstruction, scene.reconstruction);
-            setDemoSource(demoGt, scene.gt);
+            demoVideos = [demoInput, ...demoExoVideos];
             scene.exo.forEach((source, index) => setDemoSource(demoExoVideos[index], source));
             demoVideos.forEach((video) => { video.currentTime = 0; });
-            resetDemoPan();
-            updateDemoZoom();
-            demoPlayButton.textContent = "Play all";
             updateDemoControls(0);
+            if (!predViewer || !gtViewer) return;
+
+            try {
+                const manifest = await fetchJson(scene.interactive + "manifest.json");
+                if (loadId !== demoSceneLoad) return;
+                demoFrameCount = manifest.numFrames;
+                await Promise.all([
+                    predViewer.load(scene.interactive, manifest, demoInput),
+                    gtViewer.load(scene.interactive, manifest, demoInput),
+                ]);
+                if (loadId !== demoSceneLoad) return;
+                demo3dReady = true;
+                demoPlayButton.disabled = false;
+                demoProgress.disabled = false;
+                updateDemoControls(0);
+            } catch (error) {
+                console.error(`Failed to load ${sceneId}`, error);
+            }
         };
 
-        const playAllDemoVideos = async () => {
-            const playRequests = demoVideos.map((video) => video.play().catch(() => null));
-            await Promise.all(playRequests);
-            demoPlayButton.textContent = "Pause all";
-        };
-
-        const pauseAllDemoVideos = () => {
-            demoVideos.forEach((video) => video.pause());
-            demoPlayButton.textContent = "Play all";
-        };
-
-        [...demoPreviewVideos, ...demoOutputVideos].forEach((video) => {
+        [...demoPreviewVideos, ...demoExoVideos].forEach((video) => {
             video.addEventListener("loadedmetadata", () => {
                 updateDemoFrameAspect(video);
                 if (demoVideos.includes(video)) updateDemoControls(demoInput.currentTime);
@@ -1296,10 +1689,10 @@
                 if (video === demoInput) syncDemoTime(video.currentTime);
             });
             video.addEventListener("play", () => {
-                if (video === demoInput) playAllDemoVideos();
+                if (video === demoInput && !demoPlaybackChanging) playAllDemoVideos();
             });
             video.addEventListener("pause", () => {
-                if (video === demoInput && !demoSyncing) pauseAllDemoVideos();
+                if (video === demoInput && !demoSyncing && !demoPlaybackChanging) pauseAllDemoVideos();
             });
         });
 
@@ -1316,38 +1709,16 @@
             updateDemoControls(0);
         });
         demoProgress.addEventListener("input", () => syncDemoTime(Number(demoProgress.value)));
-        demoZoomOut.addEventListener("click", () => changeDemoZoom(-0.1));
-        demoZoomReset.addEventListener("click", () => { demoZoom = 1; resetDemoPan(); updateDemoZoom(); });
-        demoZoomIn.addEventListener("click", () => changeDemoZoom(0.1));
-        demoReconstructionViewport.addEventListener("wheel", (event) => {
-            event.preventDefault();
-            changeDemoZoom(event.deltaY < 0 ? 0.1 : -0.1);
-        }, { passive: false });
-        demoReconstructionViewport.addEventListener("pointerdown", (event) => {
-            if (demoZoom <= 1) return;
-            event.preventDefault();
-            demoDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, panX: demoPanX, panY: demoPanY };
-            demoReconstructionViewport.classList.add("is-dragging");
-            demoReconstructionViewport.setPointerCapture(event.pointerId);
-        });
-        demoReconstructionViewport.addEventListener("pointermove", (event) => {
-            if (!demoDrag || event.pointerId !== demoDrag.pointerId) return;
-            demoPanX = demoDrag.panX + event.clientX - demoDrag.startX;
-            demoPanY = demoDrag.panY + event.clientY - demoDrag.startY;
-            updateDemoZoom();
-        });
-        const endDemoDrag = (event) => {
-            if (!demoDrag || event.pointerId !== demoDrag.pointerId) return;
-            demoDrag = null;
-            demoReconstructionViewport.classList.remove("is-dragging");
-            if (demoReconstructionViewport.hasPointerCapture(event.pointerId)) {
-                demoReconstructionViewport.releasePointerCapture(event.pointerId);
-            }
+        document.getElementById("demo-pred-view-reset").addEventListener("click", () => predViewer?.resetView());
+        document.getElementById("demo-gt-view-reset").addEventListener("click", () => gtViewer?.resetView());
+
+        const renderDemo = () => {
+            updateDemo3dFrame();
+            predViewer?.render();
+            gtViewer?.render();
+            window.requestAnimationFrame(renderDemo);
         };
-        demoReconstructionViewport.addEventListener("pointerup", endDemoDrag);
-        demoReconstructionViewport.addEventListener("pointercancel", endDemoDrag);
-        window.addEventListener("resize", updateDemoZoom);
-        updateDemoZoom();
+        renderDemo();
         loadDemoScene(demoSceneButtons[0].dataset.scene);
 
         const navLinks = [...document.querySelectorAll(".nav-links a")];
