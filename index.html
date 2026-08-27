@@ -134,14 +134,23 @@
         }
 
         .tagline strong { color: var(--accent); }
-        .authors { margin-bottom: 6px; font-size: 16px; }
-
-        .authors a {
+        .authors {
+            margin-bottom: 6px;
             color: var(--accent-dark);
-            border-bottom: 1px solid transparent;
+            font-size: 16px;
+            font-weight: 700;
         }
 
-        .authors a:hover { border-bottom-color: currentColor; }
+        .authors a {
+            color: inherit;
+            border-bottom: 1px solid transparent;
+            font-weight: inherit;
+        }
+
+        .authors a:hover {
+            color: inherit;
+            border-bottom-color: currentColor;
+        }
 
         .affiliations {
             margin: 0;
