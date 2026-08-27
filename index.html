@@ -104,6 +104,7 @@
 
         .hero {
             padding: 32px 0 20px;
+            scroll-margin-top: 50px;
             text-align: center;
         }
 
@@ -432,11 +433,13 @@
 
         .demo-view-reset:hover { background: rgba(0, 0, 0, 0.82); }
 
+        .demo-exo-section { margin-top: 24px; }
+
         .demo-exo-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
-            margin-top: 14px;
+            margin-top: 8px;
         }
 
         .demo-exo-grid .demo-video-frame { aspect-ratio: 16 / 9; }
@@ -487,7 +490,7 @@
         .media-frame.is-missing img { display: none; }
 
         .caption {
-            max-width: 920px;
+            max-width: 860px;
             margin: 7px auto 0;
             color: var(--muted);
             font-size: 12px;
@@ -840,14 +843,15 @@
             .teaser-section { padding-top: 8px; }
             .teaser-tldr { font-size: 14px; }
 
-            .media-frame.teaser-frame,
-            .media-frame.method-frame { aspect-ratio: 4 / 3; }
+            .media-frame.teaser-frame { aspect-ratio: 16 / 7; }
+            .media-frame.method-frame { aspect-ratio: 16 / 6; }
 
             .demo-controls { grid-template-columns: 1fr; }
             .demo-scene-strip { gap: 6px; }
             .demo-scene-card h3 { margin-right: 5px; margin-left: 5px; font-size: 11px; }
             .demo-results-grid { grid-template-columns: 1fr; }
             .demo-gt { width: 100%; }
+            .demo-exo-section { margin-top: 22px; }
             .demo-exo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
             .benchmark-table th,
@@ -868,7 +872,7 @@
         <div class="container nav-inner">
             <a class="brand" href="#top">RESELF</a>
             <div class="nav-links">
-                <a href="#overview">Overview</a>
+                <a href="#top">Overview</a>
                 <a href="#abstract">Abstract</a>
                 <a href="#method">Method</a>
                 <a href="#results">Results</a>
