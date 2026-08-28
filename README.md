@@ -1,40 +1,49 @@
-# RESELF: Seeing the World and the Self from Egocentric Video
+<div align="center">
+
+# Seeing the World and the Self from Egocentric Video
+
+RESELF: REconstructing the Scene and the sELF.
+
+Kai Guan<sup>1,2,*</sup>, Minchao Jiang<sup>2,*</sup>, Liruichen Wang<sup>2</sup>, [Wentao Zhu](https://wentao.live/about.html)<sup>2,†</sup>, [Lei Zhang](https://www4.comp.polyu.edu.hk/~cslzhang/)<sup>1,†</sup>
+
+<sup>1</sup>The Hong Kong Polytechnic University &nbsp;&nbsp; <sup>2</sup>Eastern Institute of Technology, Ningbo  
+<sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Corresponding authors
+
+[Project Website](https://ka1guan.github.io/RESELF) · [Code](https://github.com/Ka1Guan/RESELF)
+
+</div>
 
 RESELF is a project for joint metric scene reconstruction and full-body motion estimation from monocular egocentric video.
 
+## 📌 TODO
 
-## Overview
+- [ ] Release the test code
+- [ ] Release the training code
+- [ ] Release the dataset
 
-RESELF reconstructs:
-- metric scene geometry
-- camera trajectory
-- full-body motion of the wearer
+## 🎬 Overview
 
-The core idea is to couple deterministic geometry with motion generation in a shared metric frame.
+RESELF jointly reconstructs metric scene geometry and the wearer's full-body motion from monocular egocentric video. The pipeline follows three steps:
 
-## Method
+- Metric geometry: reconstruct the surrounding scene and camera trajectory in a shared metric frame.
+- Conditioned motion: predict full-body motion conditioned on the recovered geometry.
+- Kinematic feedback: refine pose and camera consistency with closed-loop feedback.
 
 ![Method figure](assets/fig_inference.png)
 
-RESELF takes a monocular egocentric video, builds metric scene geometry with a Pi3-based backbone, and uses the recovered geometry to guide motion generation.
+## 📂 Dataset
 
-## Demo Video
+EE4D-JSM is built from EgoExo4D and EE4D-Motion. It aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion for training and evaluation.
 
-> Full demo video placeholder
+## 📧 Contact
 
-## Release Plan
+If you have any questions, feel free to contact: kai11.guan@connect.polyu.hk
 
-Planned release items:
+## 🤝 Acknowledgments
 
-- [ ] Test code
-- [ ] Training code
-- [ ] Dataset
+This project is built upon Pi3 and UniEgoMotion.
 
-## Dataset
-
-EE4D-JSM is built from EgoExo4D and EE4D-Motion and aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion under one training and evaluation protocol.
-
-## Citation
+## 📝 Citation
 
 ```bibtex
 @inproceedings{guan2026reself,
