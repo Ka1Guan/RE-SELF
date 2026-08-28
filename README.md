@@ -14,7 +14,7 @@ The core idea is to couple deterministic geometry with motion generation in a sh
 
 ## Method
 
-> Method figure placeholder
+![Method figure](assets/fig_inference.png)
 
 RESELF takes a monocular egocentric video, builds metric scene geometry with a Pi3-based backbone, and uses the recovered geometry to guide motion generation.
 
