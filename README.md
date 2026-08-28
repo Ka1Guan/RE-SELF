@@ -9,7 +9,6 @@ Kai Guan<sup>1,2,*</sup>, Minchao Jiang<sup>2,*</sup>, Liruichen Wang<sup>2</sup
 <sup>1</sup>The Hong Kong Polytechnic University &nbsp;&nbsp; <sup>2</sup>Eastern Institute of Technology, Ningbo  
 <sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Corresponding authors
 
-[Project Website](https://ka1guan.github.io/RESELF) · [Code](https://github.com/Ka1Guan/RESELF)
 
 </div>
 
@@ -41,7 +40,7 @@ If you have any questions, feel free to contact: kai11.guan@connect.polyu.hk
 
 ## 🤝 Acknowledgments
 
-This project is built upon Pi3 and UniEgoMotion.
+This project is built upon [Pi3](https://github.com/yyfz/Pi3) and [UniEgoMotion](https://chaitanya100100.github.io/UniEgoMotion/).
 
 ## 📝 Citation
 
