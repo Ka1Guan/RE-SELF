@@ -2,7 +2,6 @@
 
 RESELF is a project for joint metric scene reconstruction and full-body motion estimation from monocular egocentric video.
 
-This file is a project-showcase README draft. The code is not public yet, and the release plan is listed below.
 
 ## Overview
 
@@ -13,51 +12,27 @@ RESELF reconstructs:
 
 The core idea is to couple deterministic geometry with motion generation in a shared metric frame.
 
-## Demo Videos
+## Method
 
-These MP4s are the demo clips used in the project page.
+> Method figure placeholder
 
-- Cooking: [input.mp4](assets/demo_videos/sample-01-cooking/input.mp4)
-- Basketball: [input.mp4](assets/demo_videos/sample-02-basketball/input.mp4)
-- Soccer: [input.mp4](assets/demo_videos/sample-03-soccer/input.mp4)
-- Dance: [input.mp4](assets/demo_videos/sample-04-dance/input.mp4)
-- Piano: [input.mp4](assets/demo_videos/sample-05-piano/input.mp4)
+RESELF takes a monocular egocentric video, builds metric scene geometry with a Pi3-based backbone, and uses the recovered geometry to guide motion generation.
+
+## Demo Video
+
+> Full demo video placeholder
 
 ## Release Plan
 
-Nothing is publicly released yet. Planned release order:
+Planned release items:
 
-1. Dataset package
-   - EE4D-JSM release
-   - aligned egocentric RGB
-   - sparse metric scene geometry
-   - Project Aria camera trajectories
-   - SMPL-X motion
-   - split files, metadata, and preprocessing scripts
-
-2. Pretrained checkpoints
-   - RESELF checkpoints
-   - baseline weights
-
-3. Code release
-   - training scripts
-   - evaluation scripts
-   - visualization scripts
-
-4. Documentation
-   - setup instructions
-   - reproducibility notes
-   - data preparation guide
+- [ ] Test code
+- [ ] Training code
+- [ ] Dataset
 
 ## Dataset
 
 EE4D-JSM is built from EgoExo4D and EE4D-Motion and aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion under one training and evaluation protocol.
-
-Current dataset scale:
-- 16,807 training sequences
-- 5,212 testing sequences
-- 18 activity categories
-- 70+ scenes
 
 ## Citation
 
