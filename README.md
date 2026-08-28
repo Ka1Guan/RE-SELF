@@ -32,7 +32,7 @@ RESELF jointly reconstructs metric scene geometry and the wearer's full-body mot
 
 ## 📂 Dataset
 
-EE4D-JSM is built from EgoExo4D and EE4D-Motion. It aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion for training and evaluation.
+EE4D-JSM is built from [EgoExo4D](https://ego-exo4d-data.org/) and [EE4D-Motion](https://github.com/chaitanya100100/UniEgoMotion/blob/main/DATASET.md). It aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion for training and evaluation.
 
 ## 📧 Contact
 
