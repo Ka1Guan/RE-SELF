@@ -31,6 +31,14 @@ RESELF jointly reconstructs metric scene geometry and the wearer's full-body mot
 
 ![Method figure](assets/fig_inference.png)
 
+## 🎥 Demo
+
+We provide a demonstration of RESELF's reconstruction results below.
+
+<video src="assets/demo.mp4" controls width="100%"></video>
+
+For an interactive visualization, please visit the [Demo](https://ka1guan.github.io/RE-SELF/#demo) section of our project website.
+
 ## 📂 Dataset
 
 EE4D-JSM is built from [EgoExo4D](https://ego-exo4d-data.org/) and [EE4D-Motion](https://github.com/chaitanya100100/UniEgoMotion/blob/main/DATASET.md). It aligns egocentric RGB, sparse metric scene geometry, Project Aria camera trajectories, and SMPL-X motion for training and evaluation.
