@@ -35,7 +35,7 @@ RESELF jointly reconstructs metric scene geometry and the wearer's full-body mot
 
 We provide a demonstration of RESELF's reconstruction results below.
 
-<video src="assets/demo.mp4" controls width="100%"></video>
+[![RESELF Demo](assets/demo.gif)](https://ka1guan.github.io/RE-SELF/#demo)
 
 For an interactive visualization, please visit the [Demo](https://ka1guan.github.io/RE-SELF/#demo) section of our project website.
 
