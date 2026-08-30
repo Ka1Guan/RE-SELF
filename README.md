@@ -29,7 +29,7 @@ RESELF jointly reconstructs metric scene geometry and the wearer's full-body mot
 - Conditioned motion: predict full-body motion conditioned on the recovered geometry.
 - Kinematic feedback: refine pose and camera consistency with closed-loop feedback.
 
-![Method figure](assets/fig_inference_1.png)
+![Method figure](assets/fig_inference.png)
 
 
 
