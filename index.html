@@ -240,6 +240,15 @@
             text-align: center;
         }
 
+        .demo-note {
+            max-width: 780px;
+            margin: -8px auto 22px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+            text-align: center;
+        }
+
         .media-frame {
             position: relative;
             display: grid;
@@ -485,13 +494,6 @@
         .demo-progress { width: 100%; accent-color: var(--accent); }
         .demo-time { min-width: 70px; color: var(--muted); font-size: 12px; text-align: right; }
 
-        .demo-note {
-            margin: 10px 0 0;
-            color: var(--muted);
-            font-size: 12px;
-            text-align: center;
-        }
-
         .media-frame.is-missing::after {
             content: attr(data-placeholder);
             padding: 24px;
@@ -612,13 +614,6 @@
             background: var(--accent);
             font-size: 14px;
             font-weight: 700;
-        }
-
-        .demo-note {
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 13px;
-            text-align: center;
         }
 
         .legend {
@@ -975,6 +970,7 @@
             <div class="container">
                 <h2 class="section-heading">Interactive demo</h2>
                 <p class="section-lead">Select an input and inspect synchronized prediction and ground truth.</p>
+                <p class="demo-note">The GT point cloud is sparse because it comes from Ego-Exo4D's Project Aria MPS spatial signal: 3D points are triangulated from the moving glasses using photometric stereo across consecutive frames or the left/right SLAM cameras. Only static scene points with valid multi-view correspondences are recovered, so regions with limited texture, visibility, or sensor coverage remain empty. The GT body mesh is shown alongside these sensor-derived observations.</p>
 
                 <div class="demo-stage" aria-live="polite">
                     <div class="demo-scene-strip" aria-label="Choose an egocentric input">
@@ -1083,10 +1079,10 @@
             <div class="container">
                 <h2 class="section-heading">BibTeX</h2>
                 <div class="citation-wrap">
-                    <pre class="bibtex" id="bibtex">@inproceedings{guan2026reself,
+                    <pre class="bibtex" id="bibtex">@article{guan2026reself,
   title     = {Seeing the World and the Self from Egocentric Video},
   author    = {Guan, Kai and Jiang, Minchao and Wang, Liruichen and Zhu, Wentao and Zhang, Lei},
-  booktitle = {[Conference]},
+  journal   = {arXiv preprint},
   year      = {2026}
 }</pre>
                     <div class="copy-row"><button class="copy-button" id="copy-bibtex" type="button">Copy BibTeX</button></div>
