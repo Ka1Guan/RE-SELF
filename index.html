@@ -667,18 +667,18 @@
 
         .metric-table th,
         .metric-table td {
-            padding: 8px 14px;
+            padding: 8px 10px;
             border-top: 1px solid var(--line);
             text-align: right;
             vertical-align: middle;
         }
 
         .metric-table th:first-child,
-        .metric-table td:first-child { width: 37%; text-align: left; }
+        .metric-table td:first-child { width: 42%; text-align: left; }
         .metric-table th:nth-child(2),
-        .metric-table td:nth-child(2) { width: 28%; }
+        .metric-table td:nth-child(2) { width: 26%; }
         .metric-table th:nth-child(3),
-        .metric-table td:nth-child(3) { width: 35%; }
+        .metric-table td:nth-child(3) { width: 32%; }
 
         .metric-table thead th {
             color: var(--muted);
@@ -690,6 +690,7 @@
             color: var(--body);
             font-size: 14px;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .metric-table tbody td {
@@ -1047,7 +1048,7 @@
                             <tbody>
                                 <tr><th scope="row">ATE ↓ <span class="metric-unit">[m]</span></th><td>0.022</td><td class="runner-up"><span class="method-name">Pi3X</span>0.026</td></tr>
                                 <tr><th scope="row">RPE Rot. ↓ <span class="metric-unit">[deg]</span></th><td>0.341</td><td class="runner-up"><span class="method-name">Pi3X</span>0.557</td></tr>
-                                <tr><th scope="row">Abs-Rel ↓ <span class="metric-unit">[-]</span></th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
+                                <tr><th scope="row">Abs-Rel ↓</th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
                             </tbody>
                         </table>
                     </section>
@@ -1056,9 +1057,9 @@
                         <table class="metric-table">
                             <thead><tr><th scope="col">Metric</th><th scope="col">RESELF</th><th scope="col">Second best</th></tr></thead>
                             <tbody>
-                                <tr><th scope="row">MPJPE ↓ <span class="metric-unit">[m]</span></th><td>0.110</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.116</td></tr>
-                                <tr><th scope="row">PA-MPJPE ↓ <span class="metric-unit">[m]</span></th><td>0.075</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.080</td></tr>
-                                <tr><th scope="row">Hand-MPJPE ↓ <span class="metric-unit">[m]</span></th><td>0.175</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.184</td></tr>
+                                <tr><th scope="row">MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>110</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>116</td></tr>
+                                <tr><th scope="row">PA-MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>75</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>80</td></tr>
+                                <tr><th scope="row">Hand-MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>175</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>184</td></tr>
                             </tbody>
                         </table>
                     </section>
