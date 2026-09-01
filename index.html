@@ -242,10 +242,10 @@
 
         .demo-note {
             max-width: 780px;
-            margin: -8px auto 22px;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.55;
+            margin: 0 auto 22px;
+            color: var(--body);
+            font-size: 15px;
+            line-height: 1.6;
             text-align: center;
         }
 
@@ -710,6 +710,22 @@
 
         .metric-table .metric-value { display: block; }
 
+        .metric-unit {
+            color: var(--muted);
+            font-size: 0.78em;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .method-label {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .method-label.gt { color: var(--ground-truth); }
+        .method-label.base { color: var(--baseline); }
+        .method-label.ours { color: var(--ours); }
+
         .comparison-legend { margin: 22px 0 10px; }
         .comparison-legend + .qualitative-grid { margin-top: 0; }
 
@@ -969,8 +985,7 @@
         <section id="demo">
             <div class="container">
                 <h2 class="section-heading">Interactive demo</h2>
-                <p class="section-lead">Select an input and inspect synchronized prediction and ground truth.</p>
-                <p class="demo-note">The GT point cloud is sparse because it comes from Ego-Exo4D's Project Aria MPS spatial signal: 3D points are triangulated from the moving glasses using photometric stereo across consecutive frames or the left/right SLAM cameras. Only static scene points with valid multi-view correspondences are recovered, so regions with limited texture, visibility, or sensor coverage remain empty. The GT body mesh is shown alongside these sensor-derived observations.</p>
+                <p class="demo-note">Select a scene to inspect synchronized prediction and ground truth. The GT point cloud is sparse because Ego-Exo4D derives it from Project Aria MPS, which triangulates static scene points from consecutive frames or stereo SLAM views; regions with weak texture, occlusion, or limited sensor coverage remain unobserved.</p>
 
                 <div class="demo-stage" aria-live="polite">
                     <div class="demo-scene-strip" aria-label="Choose an egocentric input">
@@ -1030,9 +1045,9 @@
                         <table class="metric-table">
                             <thead><tr><th scope="col">Metric</th><th scope="col">RESELF</th><th scope="col">Second best</th></tr></thead>
                             <tbody>
-                                <tr><th scope="row">ATE ↓</th><td>0.022</td><td class="runner-up"><span class="method-name">Pi3X</span>0.026</td></tr>
-                                <tr><th scope="row">RPE Rot. ↓</th><td>0.341</td><td class="runner-up"><span class="method-name">Pi3X</span>0.557</td></tr>
-                                <tr><th scope="row">Abs-Rel ↓</th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
+                                <tr><th scope="row">ATE ↓ <span class="metric-unit">[m]</span></th><td>0.022</td><td class="runner-up"><span class="method-name">Pi3X</span>0.026</td></tr>
+                                <tr><th scope="row">RPE Rot. ↓ <span class="metric-unit">[deg]</span></th><td>0.341</td><td class="runner-up"><span class="method-name">Pi3X</span>0.557</td></tr>
+                                <tr><th scope="row">Abs-Rel ↓ <span class="metric-unit">[-]</span></th><td>0.141</td><td class="runner-up"><span class="method-name">Pi3X</span>0.147</td></tr>
                             </tbody>
                         </table>
                     </section>
@@ -1041,9 +1056,9 @@
                         <table class="metric-table">
                             <thead><tr><th scope="col">Metric</th><th scope="col">RESELF</th><th scope="col">Second best</th></tr></thead>
                             <tbody>
-                                <tr><th scope="row">MPJPE ↓</th><td>0.110</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.116</td></tr>
-                                <tr><th scope="row">PA-MPJPE ↓</th><td>0.075</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.080</td></tr>
-                                <tr><th scope="row">Hand-MPJPE ↓</th><td>0.175</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>0.184</td></tr>
+                                <tr><th scope="row">MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>110</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>116</td></tr>
+                                <tr><th scope="row">PA-MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>75</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>80</td></tr>
+                                <tr><th scope="row">Hand-MPJPE ↓ <span class="metric-unit">[mm]</span></th><td>175</td><td class="runner-up"><span class="method-name">UniEgoMotion</span>184</td></tr>
                             </tbody>
                         </table>
                     </section>
@@ -1058,11 +1073,11 @@
                 <div class="qualitative-grid">
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a local articulation comparison"><img src="assets/fig_motion1.png" alt="Qualitative comparison of UniEgoMotion and RESELF body articulation." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Local articulation.</strong> GT (green), UniEgoMotion (blue), and RESELF (orange) are compared after local alignment, highlighting body and hand pose accuracy.</figcaption>
+                        <figcaption class="caption"><strong>Local articulation.</strong> <span class="method-label gt">GT</span>, <span class="method-label base">UniEgoMotion</span>, and <span class="method-label ours">RESELF</span> denote ground truth, UniEgoMotion, and RESELF, respectively. After local alignment, the bike sequence shows incorrect body articulation and foot-ground inconsistencies for <span class="method-label base">UniEgoMotion</span>, whereas <span class="method-label ours">RESELF</span> recovers a more plausible local pose using geometry-aware scene context.</figcaption>
                     </figure>
                     <figure>
                         <div class="media-frame comparison-frame" data-placeholder="Add a global trajectory comparison"><img src="assets/fig_motion2.png" alt="Top-view comparison of global body and camera trajectories." loading="lazy"></div>
-                        <figcaption class="caption"><strong>Global alignment.</strong> The top-down comparison shows how global root position and orientation remain aligned with the reconstructed scene over time.</figcaption>
+                        <figcaption class="caption"><strong>Global alignment.</strong> The same color coding applies: <span class="method-label gt">GT</span> is ground truth, <span class="method-label base">UniEgoMotion</span> is the baseline, and <span class="method-label ours">RESELF</span> is our method. In the cooking sequence, <span class="method-label base">UniEgoMotion</span> captures much of the local articulation but exhibits substantial global root drift, while <span class="method-label ours">RESELF</span> better preserves root position and orientation. Together, these examples highlight the complementary roles of geometry-conditioned motion synthesis and kinematic feedback.</figcaption>
                     </figure>
                 </div>
             </div>
