@@ -51,7 +51,7 @@ This project is built upon [Pi3](https://github.com/yyfz/Pi3) and [UniEgoMotion]
 @misc{guan2026reself,
       title={Seeing the World and the Self from Egocentric Video}, 
       author={Kai Guan and Minchao Jiang and Ruichen WangLi and Wentao Zhu and Lei Zhang},
-      year={2026},
       journal={arXiv preprint arXiv:2609.01276},
+      year={2026},
 }
 ```
