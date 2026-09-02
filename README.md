@@ -48,10 +48,13 @@ This project is built upon [Pi3](https://github.com/yyfz/Pi3) and [UniEgoMotion]
 ## 📝 Citation
 
 ```bibtex
-@article{guan2026reself,
-  title     = {Seeing the World and the Self from Egocentric Video},
-  author    = {Guan, Kai and Jiang, Minchao and Wang, Liruichen and Zhu, Wentao and Zhang, Lei},
-  booktitle = {arXiv preprint},
-  year      = {2026}
+@misc{guan2026seeingworldselfegocentric,
+      title={Seeing the World and the Self from Egocentric Video}, 
+      author={Kai Guan and Minchao Jiang and Ruichen WangLi and Wentao Zhu and Lei Zhang},
+      year={2026},
+      eprint={2609.01276},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2609.01276}, 
 }
 ```
